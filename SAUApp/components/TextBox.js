@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   StyleSheet,
   TextInput,
@@ -6,135 +6,144 @@ import {
   Text,
   Animated,
   Easing,
-  TouchableOpacity
-} from "react-native";
-import TextInputState from "react-native/lib/TextInputState";
+  TouchableOpacity,
+} from 'react-native';
+import TextInputState from 'react-native/lib/TextInputState';
 
 export default class TextBox extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super (props);
 
-    this.textInputRef = React.createRef();
-    this.focusTextInput = this.focusTextInput.bind(this);
+    this.textInputRef = React.createRef ();
+    this.focusTextInput = this.focusTextInput.bind (this);
   }
 
   state = {
-    PlaceHolder: "TextHolder",
-    textValue: "",
+    PlaceHolder: 'TextHolder',
+    textValue: '',
 
-    placeHolderFontSize: new Animated.Value(15),
-    inputHeight: new Animated.Value(20),
-    inputMargin: new Animated.Value(5)
+    placeHolderFontSize: new Animated.Value (30),
+    inputHeight: new Animated.Value (45),
+    inputMargin: new Animated.Value (0),
   };
 
-  focusTextInput() {
-    this.textInputRef.current.focus();
+  focusTextInput () {
+    this.textInputRef.current.focus ();
   }
 
-  focusTextOut() {
+  focusTextOut () {
     value = this.state.textValue;
 
-    if (value == "")
-      Animated.parallel([
-        Animated.spring(
+    if (value == '')
+      Animated.parallel ([
+        Animated.spring (
           // Animate over time
           this.state.placeHolderFontSize, // The animated value to drive
           {
             toValue: 30,
             duration: 10,
-            easing: Easing.ease
+            easing: Easing.ease,
           }
         ),
-        Animated.timing(
+        Animated.timing (
           this.state.inputHeight,
           {
-            toValue: 0,
+            toValue: 45,
             duration: 10,
-            easing: Easing.ease
+            easing: Easing.ease,
           },
           this.state.inputMargin,
           {
             toValue: 0,
-            easing: Easing.ease
+            easing: Easing.ease,
           }
-        )
-      ]).start();
+        ),
+      ]).start ();
   }
 
-  focusTextIn() {
+  focusTextIn () {
     value = this.state.textValue;
 
-    if (value == "")
-      Animated.parallel([
-        Animated.spring(
+    if (value == '')
+      Animated.parallel ([
+        Animated.spring (
           // Animate over time
           this.state.placeHolderFontSize, // The animated value to drive
           {
             toValue: 15,
             duration: 10,
-            easing: Easing.ease
+            easing: Easing.ease,
           }
         ),
-        Animated.timing(
+        Animated.timing (
           this.state.inputHeight,
           {
             toValue: 20,
             duration: 10,
-            easing: Easing.ease
+            easing: Easing.ease,
           },
           this.state.inputMargin,
           {
-            toValue: 5,
-            easing: Easing.ease
+            toValue: 20,
+            easing: Easing.ease,
           }
-        )
-      ]).start();
+        ),
+      ]).start ();
   }
 
-  render() {
+  render () {
     return (
       <View
-        style={styles.container}
+        style={[
+          {
+            backgroundColor: 'rgba(238, 238, 238, 0.1)',
+            borderRadius: 5,
+            height: 40 + 25,
+            padding: 10,
+          },
+        ]}
         width={this.props.style.width}
         margin={this.props.style.margin}
       >
-        <TouchableOpacity onPress={this.focusTextInput} activeOpacity={1}>
+        <TouchableOpacity activeOpacity={1} style={{}}>
           <Animated.Text
             style={{
-              color: "rgba(168, 168, 168, 0.8)",
-              fontWeight: "bold",
-              fontSize: this.state.placeHolderFontSize
+              color: 'rgba(168, 168, 168, 0.8)',
+              fontWeight: 'bold',
+              fontSize: this.state.placeHolderFontSize,
+              width: this.props.style.width - 20,
             }}
+            onPress={this.focusTextInput}
           >
             {this.props.PlaceHolder}
           </Animated.Text>
           <Animated.View
             style={{
+              position: 'absolute',
+              top: this.state.inputMargin,
               height: this.state.inputHeight,
-              top: 5
+              width: this.props.style.width - 20,
             }}
           >
             <TextInput
               style={{
+                flex: 1,
                 fontSize: 20,
-                color: "#fff"
+                color: '#fff',
+                width: this.props.style.width - 20,
+                height: '100%',
+                backgroundColor: '#ccc',
               }}
               secureTextEntry={this.props.secureTextEntry}
+              returnKeyType={this.props.returnKeyType}
+              blurOnSubmit={this.props.blurOnSubmit}
               ref={this.textInputRef}
-              onFocus={this.focusTextIn.bind(this)}
-              onEndEditing={this.focusTextOut.bind(this)}
-              onChangeText={val => this.setState({ textValue: val })}
+              onFocus={this.focusTextIn.bind (this)}
+              onEndEditing={this.focusTextOut.bind (this)}
+              onChangeText={val => this.setState ({textValue: val})}
             >
               {this.props.value}
             </TextInput>
-            <Animated.Text
-              style={{
-                height: this.state.inputMargin,
-                backgroundColor: "#eee"
-              }}
-            >
-              123123
-            </Animated.Text>
           </Animated.View>
         </TouchableOpacity>
       </View>
@@ -142,10 +151,9 @@ export default class TextBox extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create ({
   container: {
-    backgroundColor: "rgba(238, 238, 238, 0.1)",
+    backgroundColor: 'rgba(238, 238, 238, 0.1)',
     borderRadius: 5,
-    padding: 10
-  }
+  },
 });
