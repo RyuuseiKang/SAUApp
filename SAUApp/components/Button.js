@@ -6,7 +6,18 @@ class Button extends React.Component {
     return (
       <View>
         <TouchableOpacity style={this.props.style} onPress={this.props.onPress}>
-          <Text style={styles.text}>{this.props.text}</Text>
+          <Text
+            style={[
+              styles.text,
+              {
+                color: "#FFF",
+                fontWeight: "bold",
+                fontSize: 18
+              }
+            ]}
+          >
+            {this.props.text}
+          </Text>
         </TouchableOpacity>
       </View>
     );

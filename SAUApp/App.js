@@ -1,12 +1,12 @@
-import React from 'react';
-import {StyleSheet, View, ScrollView} from 'react-native';
+import React from "react";
+import { StyleSheet, View, ScrollView } from "react-native";
 
-import LoginScreen from './screens/LoginScreen.js';
-import MainScreen from './screens/MainScreen.js';
-import ShuttleScreen from './screens/ShuttleScreen.js';
+import LoginScreen from "./screens/LoginScreen.js";
+import MainScreen from "./screens/MainScreen.js";
+import ShuttleScreen from "./screens/ShuttleScreen.js";
 
 export default class App extends React.Component {
-  render () {
+  render() {
     return (
       <View style={styles.container}>
         <ScrollView
@@ -14,21 +14,22 @@ export default class App extends React.Component {
           pagingEnabled={true}
           bounces={false}
           showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
         >
+          <MainScreen />
           <LoginScreen />
           <ShuttleScreen />
-          <MainScreen />
         </ScrollView>
       </View>
     );
   }
 }
 
-const styles = StyleSheet.create ({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1E344F',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+    backgroundColor: "#1E344F",
+    alignItems: "center",
+    justifyContent: "center"
+  }
 });
