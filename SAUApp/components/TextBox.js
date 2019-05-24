@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   StyleSheet,
   TextInput,
@@ -6,9 +6,9 @@ import {
   Text,
   Animated,
   Easing,
-  TouchableOpacity
-} from "react-native";
-import TextInputState from "react-native/lib/TextInputState";
+  TouchableOpacity,
+} from 'react-native';
+import TextInputState from 'react-native/lib/TextInputState';
 
 export default class TextBox extends React.Component {
   constructor(props) {
@@ -19,14 +19,14 @@ export default class TextBox extends React.Component {
   }
 
   state = {
-    PlaceHolder: "TextHolder",
-    textValue: "",
+    PlaceHolder: 'TextHolder',
+    textValue: '',
 
     ViewHeight: new Animated.Value(45),
-    placeHolderFontSize: new Animated.Value(25),
-    placeHolderTopMargin: new Animated.Value(0),
+    placeHolderFontSize: new Animated.Value(20),
+    placeHolderTopMargin: new Animated.Value(3),
     inputHeight: new Animated.Value(25),
-    TopMargin: new Animated.Value(0)
+    TopMargin: new Animated.Value(0),
   };
 
   focusTextInput() {
@@ -36,7 +36,7 @@ export default class TextBox extends React.Component {
   focusTextOut() {
     value = this.state.textValue;
 
-    if (value == "")
+    if (value == '')
       Animated.parallel([
         Animated.spring(
           // Animate over time
@@ -44,43 +44,43 @@ export default class TextBox extends React.Component {
           {
             toValue: 45,
             duration: 10,
-            easing: Easing.ease
+            easing: Easing.ease,
           }
         ),
         Animated.spring(
           // Animate over time
           this.state.placeHolderFontSize, // The animated value to drive
           {
-            toValue: 25,
+            toValue: 20,
             duration: 10,
-            easing: Easing.ease
+            easing: Easing.ease,
           }
         ),
         Animated.spring(
           this.state.placeHolderTopMargin, // The animated value to drive
           {
-            toValue: 0,
+            toValue: 3,
             duration: 10,
-            easing: Easing.ease
+            easing: Easing.ease,
           }
         ),
         Animated.timing(this.state.TopMargin, {
           toValue: 0,
           duration: 10,
-          easing: Easing.ease
+          easing: Easing.ease,
         }),
         Animated.timing(this.state.inputHeight, {
           toValue: 25,
           duration: 10,
-          easing: Easing.ease
-        })
+          easing: Easing.ease,
+        }),
       ]).start();
   }
 
   focusTextIn() {
     value = this.state.textValue;
 
-    if (value == "")
+    if (value == '')
       Animated.parallel([
         Animated.spring(
           // Animate over time
@@ -88,7 +88,7 @@ export default class TextBox extends React.Component {
           {
             toValue: 65,
             duration: 10,
-            easing: Easing.ease
+            easing: Easing.ease,
           }
         ),
         Animated.spring(
@@ -97,7 +97,7 @@ export default class TextBox extends React.Component {
           {
             toValue: 15,
             duration: 10,
-            easing: Easing.ease
+            easing: Easing.ease,
           }
         ),
         Animated.spring(
@@ -105,19 +105,19 @@ export default class TextBox extends React.Component {
           {
             toValue: 0,
             duration: 10,
-            easing: Easing.ease
+            easing: Easing.ease,
           }
         ),
         Animated.timing(this.state.TopMargin, {
           toValue: 25,
           duration: 10,
-          easing: Easing.ease
+          easing: Easing.ease,
         }),
         Animated.timing(this.state.inputHeight, {
           toValue: 20,
           duration: 10,
-          easing: Easing.ease
-        })
+          easing: Easing.ease,
+        }),
       ]).start();
   }
 
@@ -129,8 +129,8 @@ export default class TextBox extends React.Component {
             backgroundColor: this.props.style.backgroundColor,
             borderRadius: 5,
             height: this.state.ViewHeight,
-            padding: 10
-          }
+            padding: 10,
+          },
         ]}
         width={this.props.style.width}
         margin={this.props.style.margin}
@@ -138,31 +138,30 @@ export default class TextBox extends React.Component {
         <View>
           <Animated.Text
             style={{
-              color: "rgba(168, 168, 168, 0.8)",
-              fontWeight: "bold",
+              color: 'rgba(244, 244, 244, 0.8)',
               fontSize: this.state.placeHolderFontSize,
               marginTop: this.state.placeHolderTopMargin,
-              width: this.props.style.width - 20
+              width: this.props.style.width - 20,
             }}
             onPress={this.focusTextInput}
           >
             {this.props.PlaceHolder}
           </Animated.Text>
-          <View style={{ position: "absolute" }}>
+          <View style={{position: 'absolute'}}>
             <Animated.View
               style={{
                 marginTop: this.state.TopMargin,
                 height: this.state.inputHeight,
-                width: this.props.style.width - 20
+                width: this.props.style.width - 20,
               }}
             >
               <TextInput
                 style={{
                   flex: 1,
                   fontSize: 20,
-                  color: "#000",
+                  color: this.props.style.color,
                   width: this.props.style.width - 20,
-                  height: "100%"
+                  height: '100%',
                 }}
                 secureTextEntry={this.props.secureTextEntry}
                 returnKeyType={this.props.returnKeyType}
@@ -170,7 +169,7 @@ export default class TextBox extends React.Component {
                 ref={this.textInputRef}
                 onFocus={this.focusTextIn.bind(this)}
                 onEndEditing={this.focusTextOut.bind(this)}
-                onChangeText={val => this.setState({ textValue: val })}
+                onChangeText={val => this.setState({textValue: val})}
               >
                 {this.props.value}
               </TextInput>
@@ -184,7 +183,7 @@ export default class TextBox extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "rgba(238, 238, 238, 0.1)",
-    borderRadius: 5
-  }
+    backgroundColor: 'rgba(238, 238, 238, 0.1)',
+    borderRadius: 5,
+  },
 });
