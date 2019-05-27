@@ -12,8 +12,8 @@ export default class AttendElement extends React.Component {
             <Text style={styles.time}>10시</Text>
           </View>
           <View style={styles.center}>
-            <Text style={styles.lesson}>네트워크 시스템</Text>
-            <Text style={styles.location}>본관 405호</Text>
+            <Text style={styles.lesson}>과목 명</Text>
+            <Text style={styles.location}>장소</Text>
           </View>
         </View>
       </View>
@@ -25,13 +25,12 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     height: 80,
-    marginTop: 20,
     alignItems: 'center',
   },
   splitView: {
     width: '90%',
     backgroundColor: 'rgba(45, 113, 246, 0.8)',
-    borderRadius: 10,
+    borderRadius: 8,
     flexDirection: 'row',
     alignItems: 'stretch',
   },
