@@ -17,8 +17,8 @@ export default class App extends React.Component {
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
         >
-          <MainScreen />
           <LoginScreen />
+          <MainScreen />
           <ShuttleScreen />
         </ScrollView>
       </View>

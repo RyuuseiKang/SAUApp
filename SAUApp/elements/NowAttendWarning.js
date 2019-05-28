@@ -6,7 +6,7 @@ export default class NowAttendWarning extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.inContainer}>
-          <Text>수업이 진행중이지만 출석되어 있지 않습니다.</Text>
+          <Text>현재 수업이 진행중이지만 출석되어 있지 않습니다.</Text>
         </View>
       </View>
     );

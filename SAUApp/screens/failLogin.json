@@ -1,0 +1,21 @@
+{
+  "type": "default",
+  "status": 200,
+  "ok": true,
+  "headers": {
+    "map": {
+      "connection": "close",
+      "set-cookie": "SCOUTER=z6v52m5s56j1;Max-Age=2147483647, JSESSIONID=D5AA7D9E61B968F0384B53ED420F57ED;path=/;Secure;HttpOnly",
+      "content-type": "application/json;charset=UTF-8",
+      "server": "Apache/2.2.15 (CentOS)",
+      "pragma": "no-cache",
+      "expires": "Thu, 01 Jan 1970 00:00:00 GMT",
+      "date": "Tue, 28 May 2019 09:50:09 GMT",
+      "cache-control": "no-store",
+      "transfer-encoding": "Identity"
+    }
+  },
+  "url": "https://cs.sau.ac.kr/m/loginChk.do",
+  "_bodyInit": "{\"result\":false}",
+  "_bodyText": "{\"result\":false}"
+}
