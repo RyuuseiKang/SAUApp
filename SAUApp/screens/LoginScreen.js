@@ -11,19 +11,23 @@ import {
 import TextBox from '../components/TextBox.js';
 import Button from '../components/Button.js';
 
-import haksa from '../modules/haksa.js';
-
 export default class LoginScreen extends React.Component {
   constructor(props) {
     super(props);
-    this.login = this.login.bind(this);
+    //this.login = this.login.bind(this);
   }
 
-  login = (userId, passwd) => {
-    let result = csLogin('21811017', 'asdf');
-    if (result) alert('로그인 성공');
-    else alert('로그인 실패');
-  };
+  async login(userId, passwd) {
+    //let result = testNetworking();
+
+    haksa.isAliveCsSession();
+
+    await haksa.csLogin(userId, passwd);
+    if (haksa.getIsCsLogin() == true) console.log('로그인 성공');
+    else console.log('로그인 실패');
+
+    haksa.isAliveCsSession();
+  }
 
   render() {
     return (
@@ -54,13 +58,17 @@ export default class LoginScreen extends React.Component {
             style={styles.textInput}
             PlaceHolder="PASSWORD"
             secureTextEntry={true}
-            value=""
             ref={'password'}
           />
           <Button
             style={[styles.button]}
-            onPress={this.login}
-            colors={['#a1c4fd', '#c2e9fb']}
+            onPress={() => {
+              this.login(
+                this.refs.userId.state.textValue,
+                this.refs.password.state.textValue
+              );
+            }}
+            colors={['rgba(33, 33, 33, 33)', 'rgba(33, 33, 33, 33)']}
             text="LOGIN"
           />
         </ImageBackground>
@@ -105,39 +113,3 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
-
-function csLogin(userNumber, password) {
-  try {
-    let response = fetch('https://cs.sau.ac.kr/m/loginChk.do', {
-      method: 'POST',
-      headers: {
-        Host: 'cs.sau.ac.kr',
-        Connection: 'keep-alive',
-        Accept:
-          'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
-        Origin: 'https://cs.sau.ac.kr',
-        'X-Requested-With': 'XMLHttpRequest',
-        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-        Referer: 'https://cs.sau.ac.kr/m/login.do',
-        'Accept-Encoding': 'gzip, deflate, br',
-        'Accept-Language': 'ja,en-US;q=0.9,en;q=0.8,ko;q=0.7',
-      },
-      body: 'user_id=' + userNumber + '&' + 'user_pw=' + password,
-      json: true,
-    })
-      .then(res => JSON.stringify(response))
-      .then(res => {
-        console.log(res);
-
-        console.log('로그인 정보: ');
-        console.log(res._bodyInit);
-      })
-      .done();
-
-    return true;
-  } catch (error) {
-    console.log(error);
-
-    return false;
-  }
-}

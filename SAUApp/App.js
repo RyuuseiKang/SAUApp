@@ -1,9 +1,13 @@
 import React from 'react';
 import {StyleSheet, View, ScrollView, StatusBar} from 'react-native';
 
+import Haksa from './modules/Haksa.js';
+
 import LoginScreen from './screens/LoginScreen.js';
 import MainScreen from './screens/MainScreen.js';
 import ShuttleScreen from './screens/ShuttleScreen.js';
+
+haksa = new Haksa();
 
 export default class App extends React.Component {
   render() {
