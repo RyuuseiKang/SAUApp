@@ -9,11 +9,15 @@ export default class Haksa extends React.Component {
   // 이 하단부터는 학사 서버에 관련된 부분
 
   // 학사 로그인 세션관련
+  sauSession = {
+    isCsLogin: false,
+    Cookie: '',
+  };
 
   // 학사 서버에 로그인
   async Login(userId, password) {
     try {
-      let response = await fetch('https://sso.sau.ac.kr/login.jsp', {
+      let loginResponse = await fetch('https://sso.sau.ac.kr/login.jsp', {
         method: 'POST',
         headers: {
           Host: 'sso.sau.ac.kr',
@@ -36,132 +40,279 @@ export default class Haksa extends React.Component {
           '&y=0',
         json: true,
       });
-      console.log(await response);
+      var JSession = await loginResponse.headers
+        .get('set-cookie')
+        .split('JSESSIONID=')[1]
+        .split(';')[0];
 
-      // 여기까지 tmax 토큰등을 받아오는 작업을 수행함
-      /* 해당 리스폰스 값)
-      
-INFO
-18:08
-Response {
-  "_bodyInit": "
+      var tmaxeamfmRegistry = await loginResponse.text().then(responseText => {
+        return responseText.split('<form ')[1].split('</form>')[0];
+      });
 
+      // 여기까지 tmaxeamfmRegistry 등록부 수신 처리
 
+      let tokenRegistrationBody =
+        'tmaxsso_enco=utf-8&tmaxsso_tokn=' +
+        tmaxeamfmRegistry.split("tmaxsso_tokn' value='")[1].split("'")[0] +
+        '&tmaxsso_next=' +
+        tmaxeamfmRegistry.split("tmaxsso_next' value='")[1].split("'")[0] +
+        '&tmaxsso_clienitip=' +
+        tmaxeamfmRegistry.split("tmaxsso_clienitip' value='")[1].split("'")[0] +
+        '&tmaxsso_logout=' +
+        tmaxeamfmRegistry.split("tmaxsso_logout' value='")[1].split("'")[0] +
+        '&tmaxsso_serv=' +
+        tmaxeamfmRegistry.split("tmaxsso_serv' value='")[1].split("'")[0] +
+        '&tmaxsso_action=token_registration';
 
+      let tokenRegistrationResponse = await fetch(
+        'https://ssoserver.sau.ac.kr/__tmax_eam_server__?tmaxsso_action=token_registration',
+        {
+          method: 'POST',
+          headers: {
+            Host: 'ssoserver.sau.ac.kr',
+            'User-Agent':
+              'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36',
+            Connection: 'keep-alive',
+            Origin: 'https://sso.sau.ac.kr',
+            'Content-Type': 'application/x-www-form-urlencoded',
+            Accept:
+              'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+            Referer: 'https://sso.sau.ac.kr/login.jsp',
+            Cookie: 'ROUTEID=.ssoserver1;' + 'JSESSIONID=' + JSession,
+          },
+          body: tokenRegistrationBody,
+        }
+      );
 
+      var tmaxsso_sessionindex = await tokenRegistrationResponse.headers
+        .get('set-cookie')
+        .split('tmaxsso_sessionindex=')[1]
+        .split(';')[0];
 
+      var tmaxeamfmHaksa = await tokenRegistrationResponse
+        .text()
+        .then(responseText => {
+          return responseText.split('<form ')[1].split('</form>')[0];
+        });
 
+      // 여기까지 tmaxeamfmHaksa 등록부 송신 처리 및 토큰 분할 값 수신
 
+      let haksaRegistSessionIdBody =
+        'PARAM_OPERATION_TYPE=' +
+        tmaxeamfmHaksa.split("PARAM_OPERATION_TYPE' value='")[1].split("'")[0] +
+        '&tmaxsso_sessionindex=' +
+        tmaxeamfmHaksa.split("tmaxsso_sessionindex' value='")[1].split("'")[0] +
+        '&tmaxsso_clienitip=' +
+        tmaxeamfmHaksa.split("tmaxsso_clienitip' value='")[1].split("'")[0] +
+        '&tmaxsso_sessionid=' +
+        tmaxeamfmHaksa.split("tmaxsso_sessionid' value='")[1].split("'")[0];
 
+      let haksaRegistSessionResponse = await fetch('http://haksa.sau.ac.kr/', {
+        method: 'POST',
+        headers: {
+          Host: 'haksa.sau.ac.kr',
+          'User-Agent':
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36',
+          Connection: 'keep-alive',
+          'Cache-Control': 'max-age=0',
+          'Upgrade-Insecure-Requests': 1,
+          Origin: null,
+          'Content-Type': 'application/x-www-form-urlencoded',
+          Accept:
+            'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+          Cookie: 'tmaxsso_sessionindex=' + tmaxsso_sessionindex,
+        },
+        body: haksaRegistSessionIdBody,
+      });
+      JSession = await haksaRegistSessionResponse.headers
+        .get('set-cookie')
+        .split('JSESSIONID=')[1]
+        .split(';')[0];
 
+      var tmaxeamfmDistribution = await haksaRegistSessionResponse
+        .text()
+        .then(responseText => {
+          return responseText.split('<form ')[1].split('</form>')[0];
+        });
 
+      let tokenDistributionBody =
+        'tmaxsso_action=' +
+        tmaxeamfmDistribution
+          .split("tmaxsso_action' value='")[1]
+          .split("'")[0] +
+        '&tmaxsso_rtrn=' +
+        tmaxeamfmDistribution.split("tmaxsso_rtrn' value='")[1].split("'")[0] +
+        '&tmaxsso_serv=' +
+        tmaxeamfmDistribution.split("tmaxsso_serv' value='")[1].split("'")[0] +
+        '&tmaxsso_sessionindex=' +
+        tmaxeamfmDistribution
+          .split("tmaxsso_sessionindex' value='")[1]
+          .split("'")[0] +
+        '&tmaxsso_checksingle=' +
+        tmaxeamfmDistribution
+          .split("tmaxsso_checksingle' value='")[1]
+          .split("'")[0] +
+        '&tmaxsso_ttype=' +
+        tmaxeamfmDistribution.split("tmaxsso_ttype' value='")[1].split("'")[0] +
+        '&tmaxsso_logout=' +
+        tmaxeamfmDistribution
+          .split("tmaxsso_logout' value='")[1]
+          .split("'")[0] +
+        '&tmaxsso_method=' +
+        tmaxeamfmDistribution
+          .split("tmaxsso_method' value='")[1]
+          .split("'")[0] +
+        '&tmaxsso_next=' +
+        tmaxeamfmDistribution.split("tmaxsso_next' value='")[1].split("'")[0];
 
+      let tokenDistributionResponse = await fetch(
+        'http://ssoserver.sau.ac.kr/__tmax_eam_server__?tmaxsso_action=token_distribution',
+        {
+          method: 'POST',
+          headers: {
+            Host: 'ssoserver.sau.ac.kr',
+            'User-Agent':
+              'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36',
+            Connection: 'keep-alive',
+            'Cache-Control': 'max-age=0',
+            Origin: 'http://haksa.sau.ac.kr',
+            'Upgrade-Insecure-Requests': 1,
+            'Content-Type': 'application/x-www-form-urlencoded',
+            Accept:
+              'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+            Referer: 'http://haksa.sau.ac.kr/',
+            Cookie:
+              'ROUTEID=.ssoserver1; ' +
+              'JSESSIONID=' +
+              JSession +
+              '; tmaxsso_sessionindex=' +
+              tmaxsso_sessionindex,
+          },
+          body: tokenDistributionBody,
+        }
+      );
+      JSession = await tokenDistributionResponse.headers
+        .get('set-cookie')
+        .split('JSESSIONID=')[1]
+        .split(';')[0];
 
+      var tmaxeamfmLoginCm = await tokenDistributionResponse
+        .text()
+        .then(responseText => {
+          return responseText.split('<form ')[1].split('</form>')[0];
+        });
 
+      // 여기까지 tmaxeamfmHaksa 분할부 송신 처리 및 토큰 분할 값 수신
 
+      // 여기서부터 토큰 주고받고 검증
 
+      for (var i = 0; i < 5; i++) {
+        console.log('loginCm: ', tmaxeamfmLoginCm);
 
+        tmaxsso_sessionindex = tmaxeamfmLoginCm
+          .split("tmaxsso_sessionindex' value='")[1]
+          .split("'")[0];
 
-		<html>
-			<head>
-				<script type=\"text/javascript\" src=\"/js/jquery-1.7.0.min.js\"></script>
-				<script type=\"text/javascript\">
-					$(document).ready( function () {
-						var tmaxeamfm = $(\"form[name=tmaxeamfm]\");
-						if(tmaxeamfm.length > 0 && tmaxeamfm != null && tmaxeamfm != \"\")
-						{
-							tmaxeamfm.submit();
-						}
-						else
-						{
-							alert('token registration failure');
-							document.location.href='https://sso.sau.ac.kr/logout.jsp';
-						}
-					});
-				</script>
-			</head>
-			<body>
-<form name='tmaxeamfm' method='post' action='https://ssoserver.sau.ac.kr/__tmax_eam_server__?tmaxsso_action=token_registration'>
-<input type=hidden name='tmaxsso_enco' value='utf-8'>
-<input type=hidden name='tmaxsso_tokn' value='ffff1c92900f12244a70a02932ec7f478934be10b2dec9c42b335a4a1e3f7a3e573a9ab9ab0d308ccd81ae25b00e3805f8cf104249ec9290cf7c465cb7f479e7a66dc233285d448431abb13162aa318b329b'>
-<input type=hidden name='tmaxsso_next' value='687474703a2f2f68616b73612e7361752e61632e6b722f'>
-<input type=hidden name='tmaxsso_clienitip' value='223.62.163.5'>
-<input type=hidden name='tmaxsso_logout' value='68747470733a2f2f73736f2e7361752e61632e6b722f6c6f676f75742e6a73703b6a73657373696f6e69643d4233424434423432313145424631424335413530303630463038374237413437'>
-<input type=hidden name='tmaxsso_serv' value='sso'>
-<input type=hidden name='tmaxsso_action' value='token_registration'>
-</form>
+        let loginCmBody =
+          'tmaxsso_action=' +
+          tmaxeamfmLoginCm.split("tmaxsso_action' value='")[1].split("'")[0] +
+          'tmaxsso_tokn=' +
+          tmaxeamfmLoginCm.split("tmaxsso_tokn' value='")[1].split("'")[0] +
+          'tmaxsso_sessionid=' +
+          tmaxeamfmLoginCm
+            .split("tmaxsso_sessionid' value='")[1]
+            .split("'")[0] +
+          'tmaxsso_rtrn=' +
+          tmaxeamfmLoginCm.split("tmaxsso_rtrn' value='")[1].split("'")[0] +
+          'tmaxsso_serv=' +
+          tmaxeamfmLoginCm.split("tmaxsso_serv' value='")[1].split("'")[0] +
+          'tmaxsso_sessionindex=' +
+          tmaxsso_sessionindex +
+          'tmaxsso_ttype=' +
+          tmaxeamfmLoginCm.split("tmaxsso_ttype' value='")[1].split("'")[0] +
+          '&tmaxsso_checksingle=' +
+          tmaxeamfmLoginCm
+            .split("tmaxsso_checksingle' value='")[1]
+            .split("'")[0] +
+          '&PARAM_OPERATION_TYPE=' +
+          tmaxeamfmLoginCm
+            .split("PARAM_OPERATION_TYPE' value='")[1]
+            .split("'")[0] +
+          '&tmaxsso_logout=' +
+          tmaxeamfmLoginCm.split("tmaxsso_logout' value='")[1].split("'")[0];
+        '&tmaxsso_method=' +
+          tmaxeamfmLoginCm.split("tmaxsso_method' value='")[1].split("'")[0];
+        '&tmaxsso_next=' +
+          tmaxeamfmLoginCm.split("tmaxsso_next' value='")[1].split("'")[0];
 
-			</body>
-		</html>
-",
-  "_bodyText": "
+        let loginCmResponse = await fetch(
+          'http://haksa.sau.ac.kr/jsp/Tlogin/login_cm.jsp',
+          {
+            method: 'POST',
+            headers: {
+              Host: 'haksa.sau.ac.kr',
+              'User-Agent':
+                'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36',
+              Connection: 'keep-alive',
+              'Cache-Control': 'max-age=0',
+              Origin: 'http://ssoserver.sau.ac.kr',
+              'Upgrade-Insecure-Requests': 1,
+              'Content-Type': 'application/x-www-form-urlencoded',
+              Accept:
+                'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+              Referer:
+                'http://ssoserver.sau.ac.kr/__tmax_eam_server__?tmaxsso_action=token_distribution',
+              Cookie:
+                'ROUTEID=.hak1; ' +
+                'JSESSIONID=' +
+                JSession +
+                '; tmaxsso_sessionindex=' +
+                tmaxsso_sessionindex,
+            },
+            body: loginCmBody,
+          }
+        );
+        JSession = await loginCmResponse.headers
+          .get('set-cookie')
+          .split('JSESSIONID=')[1]
+          .split(';')[0];
 
+        tmaxeamfmLoginCm = await loginCmResponse.text().then(responseText => {
+          return responseText.split('<form ')[1].split('</form>')[0];
+        });
 
+        console.log(tmaxeamfmLoginCm);
+      }
 
+      // 여기까지 마지막으로 토큰 분할 정보 송신
+      // 아래로는 정상 접속 테스트
 
+      let loginHaksaResponse = await fetch('http://haksa.sau.ac.kr/', {
+        method: 'GET',
+        headers: {
+          Host: 'haksa.sau.ac.kr',
+          'User-Agent':
+            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36',
+          Connection: 'keep-alive',
+          'Cache-Control': 'max-age=0',
+          'Upgrade-Insecure-Requests': 1,
+          Accept:
+            'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
+          Referer:
+            'http://ssoserver.sau.ac.kr/__tmax_eam_server__?tmaxsso_action=token_distribution',
+          Cookie:
+            'ROUTEID=.hak1; ' +
+            'JSESSIONID=' +
+            JSession +
+            '; tmaxsso_sessionindex=' +
+            tmaxsso_sessionindex,
+        },
+      });
 
+      //console.log(await loginHaksaResponse);
 
-
-
-
-
-
-
-
-
-
-
-
-		<html>
-			<head>
-				<script type=\"text/javascript\" src=\"/js/jquery-1.7.0.min.js\"></script>
-				<script type=\"text/javascript\">
-					$(document).ready( function () {
-						var tmaxeamfm = $(\"form[name=tmaxeamfm]\");
-						if(tmaxeamfm.length > 0 && tmaxeamfm != null && tmaxeamfm != \"\")
-						{
-							tmaxeamfm.submit();
-						}
-						else
-						{
-							alert('token registration failure');
-							document.location.href='https://sso.sau.ac.kr/logout.jsp';
-						}
-					});
-				</script>
-			</head>
-			<body>
-<form name='tmaxeamfm' method='post' action='https://ssoserver.sau.ac.kr/__tmax_eam_server__?tmaxsso_action=token_registration'>
-<input type=hidden name='tmaxsso_enco' value='utf-8'>
-<input type=hidden name='tmaxsso_tokn' value='ffff1c92900f12244a70a02932ec7f478934be10b2dec9c42b335a4a1e3f7a3e573a9ab9ab0d308ccd81ae25b00e3805f8cf104249ec9290cf7c465cb7f479e7a66dc233285d448431abb13162aa318b329b'>
-<input type=hidden name='tmaxsso_next' value='687474703a2f2f68616b73612e7361752e61632e6b722f'>
-<input type=hidden name='tmaxsso_clienitip' value='223.62.163.5'>
-<input type=hidden name='tmaxsso_logout' value='68747470733a2f2f73736f2e7361752e61632e6b722f6c6f676f75742e6a73703b6a73657373696f6e69643d4233424434423432313145424631424335413530303630463038374237413437'>
-<input type=hidden name='tmaxsso_serv' value='sso'>
-<input type=hidden name='tmaxsso_action' value='token_registration'>
-</form>
-
-			</body>
-		</html>
-",
-  "headers": Headers {
-    "map": Object {
-      "connection": "close",
-      "content-length": "1441",
-      "content-type": "text/html;charset=utf-8",
-      "date": "Wed, 29 May 2019 09:08:13 GMT",
-      "set-cookie": "JSESSIONID=B3BD4B4211EBF1BC5A50060F087B7A47; Path=/; Secure, ROUTEID=.ssoagent1; path=/",
-    },
-  },
-  "ok": true,
-  "status": 200,
-  "statusText": undefined,
-  "type": "default",
-  "url": "https://sso.sau.ac.kr/login.jsp",
-}
- */
-
-      //console.log(responseJson);
+      // 나중에 쿠키를 통한 자동로그인을 구현
+      this.sauSession.Cookie = 'JSESSIONID=' + JSession;
 
       return true;
     } catch (error) {
