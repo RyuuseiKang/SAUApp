@@ -20,13 +20,14 @@ export default class LoginScreen extends React.Component {
   async login(userId, passwd) {
     //let result = testNetworking();
 
-    haksa.isAliveCsSession();
+    haksa.Login(userId, passwd);
 
-    await haksa.csLogin(userId, passwd);
-    if (haksa.getIsCsLogin() == true) console.log('로그인 성공');
-    else console.log('로그인 실패');
+    //const isSuccess = await haksa.getCsCookie(userId);
 
-    haksa.isAliveCsSession();
+    //if ((await haksa.getCsCookie(userId)) == true) console.log('로그인 성공');
+    //else console.log('로그인 실패');
+
+    // haksa.isAliveCsSession();
   }
 
   render() {
