@@ -25,6 +25,7 @@ export default class Haksa extends React.Component {
     }
   }
 
+  cookie = new Cookie();
   async LoginJsp(userId, passwd) {
     let response = await fetch(
       'https://sso.sau.ac.kr/login.jsp?master_id=' +
@@ -44,15 +45,15 @@ export default class Haksa extends React.Component {
         },
       }
     );
-    let loginJspCookie = new Cookie();
-    loginJspCookie.SetCookie(
+
+    cookie.SetCookie(
       'JSESSIONID',
       await response.headers
         .get('set-cookie')
         .split('JSESSIONID=')[1]
         .split(';')[0]
     );
-    loginJspCookie.SetCookie('ROUTEID', '.ssoagent1');
+    cookie.SetCookie('ROUTEID', '.ssoagent1');
 
     let body = await response.text().then(responseText => {
       return responseText.split('<form name')[1].split('</form>')[0];
@@ -70,14 +71,12 @@ export default class Haksa extends React.Component {
       );
     }
 
-    this.loginJspResponseParser.SetCookie(loginJspCookie);
-
     this.LoginRegistrationToken();
   }
   loginJspResponseParser = new ResponseParser();
 
   async LoginRegistrationToken() {
-    let JspCookie = this.loginJspResponseParser.GetCookie();
+    let JspCookie = this.cookie.GetCookie();
     let JspValue = this.loginJspResponseParser.GetValue();
 
     let response = await fetch(
@@ -95,36 +94,13 @@ export default class Haksa extends React.Component {
       }
     );
 
-    console.log(response.headers);
-    console.log(JspCookie);
-
-    let loginRegistrationTokenCookie = new Cookie();
-    if (response.indexOf('JSESSIONID') != -1)
-      loginRegistrationTokenCookie.SetCookie(
-        'JSESSIONID',
-        await response.headers
-          .get('set-cookie')
-          .split('JSESSIONID=')[1]
-          .split(';')[0]
-      );
-
-    if (response.indexOf('tmaxsso_sessionindex') != -1)
-      loginRegistrationTokenCookie.SetCookie(
-        'tmaxsso_sessionindex',
-        await response.headers
-          .get('set-cookie')
-          .split('tmaxsso_sessionindex=')[1]
-          .split(';')[0]
-      );
-
-    if (response.indexOf('ROUTEID') != -1)
-      loginRegistrationTokenCookie.SetCookie(
-        'ROUTEID',
-        await response.headers
-          .get('set-cookie')
-          .split('ROUTEID=')[1]
-          .split(';')[0]
-      );
+    cookie.SetCookie(
+      'tmaxsso_sessionindex',
+      await response.headers
+        .get('set-cookie')
+        .split('tmaxsso_sessionindex=')[1]
+        .split(';')[0]
+    );
 
     let body = await response.text().then(responseText => {
       return responseText.split('<form name')[1].split('</form>')[0];
@@ -136,21 +112,11 @@ export default class Haksa extends React.Component {
     var paramsCount = (body.length - replaceAll(body, 'input', '').length) / 5;
 
     for (var i = 0; i < paramsCount; i++) {
-      console.log(
-        body.split("name='")[i + 1].split("'")[0],
-        ', ',
-        body.split("value='")[i + 1].split("'")[0]
-      );
-
       this.loginRegistrationTokenResponseParser.SetParameter(
         body.split("name='")[i + 1].split("'")[0],
         body.split("value='")[i + 1].split("'")[0]
       );
     }
-
-    this.loginRegistrationTokenResponseParser.SetCookie(
-      loginRegistrationTokenCookie
-    );
 
     console.log(
       'Cookie: ',
@@ -160,8 +126,65 @@ export default class Haksa extends React.Component {
       'Value: ',
       this.loginRegistrationTokenResponseParser.GetValue()
     );
+
+    this.LoginRegistrationToken();
   }
   loginRegistrationTokenResponseParser = new ResponseParser();
+
+  async LoginRegistrationSession(){
+    let JspCookie = this.cookie.GetCookie();
+    let JspValue = this.loginJspResponseParser.GetValue();
+
+    let response = await fetch(
+      'http://haksa.sau.ac.kr/?' + JspValue,
+      {
+        method: 'POST',
+        headers: {
+          Host: 'haksa.sau.ac.kr',
+          Connection: 'keep-alive',
+          Accept: '*/*',
+          Origin: 'null',
+          Cookie: JspCookie,
+        },
+      }
+    );
+
+    cookie.SetCookie(
+      'tmaxsso_sessionindex',
+      await response.headers
+        .get('set-cookie')
+        .split('tmaxsso_sessionindex=')[1]
+        .split(';')[0]
+    );
+
+    let body = await response.text().then(responseText => {
+      return responseText.split('<form name')[1].split('</form>')[0];
+    });
+
+    //loginRegistrationTokenResponseParser.SetMethod(body.split("method='")[1].split("'")[0]);
+    //loginRegistrationTokenResponseParser.SetLink(body.split("action='")[1].split("'")[0]);
+
+    var paramsCount = (body.length - replaceAll(body, 'input', '').length) / 5;
+
+    for (var i = 0; i < paramsCount; i++) {
+      this.loginRegistrationTokenResponseParser.SetParameter(
+        body.split("name='")[i + 1].split("'")[0],
+        body.split("value='")[i + 1].split("'")[0]
+      );
+    }
+
+    console.log(
+      'Cookie: ',
+      this.loginRegistrationTokenResponseParser.GetCookie()
+    );
+    console.log(
+      'Value: ',
+      this.loginRegistrationTokenResponseParser.GetValue()
+    );
+
+    this.LoginRegistrationToken();
+  }
+  loginRegistrationSessionParser = new ResponseParser();
 
   // 학사 서버에 로그인(Legacy)
   async Legacy_Login(userId, password) {
