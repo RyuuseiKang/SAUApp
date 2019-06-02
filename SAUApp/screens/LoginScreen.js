@@ -6,10 +6,12 @@ import {
   KeyboardAvoidingView,
   Dimensions,
   ImageBackground,
+  WebView,
 } from 'react-native';
 
 import TextBox from '../components/TextBox.js';
 import Button from '../components/Button.js';
+import haksa from '../modules/Haksa.js';
 
 export default class LoginScreen extends React.Component {
   constructor(props) {
@@ -20,15 +22,50 @@ export default class LoginScreen extends React.Component {
   async login(userId, passwd) {
     //let result = testNetworking();
 
-    haksa.Login(userId, passwd);
+    //Haksa.Login(userId, passwd);
+
+    let authPage = 'https://sso.sau.ac.kr/login.jsp';
+
+    this.setState({
+      loginUrl:
+        authPage +
+        '?master_id=' +
+        userId +
+        '&master_passwd=' +
+        passwd +
+        '&x=0&y=0',
+    });
 
     //const isSuccess = await haksa.getCsCookie(userId);
 
-    //if ((await haksa.getCsCookie(userId)) == true) console.log('로그인 성공');
-    //else console.log('로그인 실패');
+    // if ((await haksa.getCsCookie(userId)) == true) console.log('로그인 성공');
+    // else console.log('로그인 실패');
 
     // haksa.isAliveCsSession();
   }
+
+  _onNavigationStateChange(webViewState) {
+    //console.log(webViewState.url);
+    alert(webViewState.postMessage);
+
+    if (webViewState.url == 'http://haksa.sau.ac.kr/blank.jsp') {
+      // TODO: 쿠키값 받아오는 부분
+
+      //haksa.setHaksaCookie(event.jsEvolutionValue);
+
+      this.setState({
+        injectionJSCode: 'window.postMessage(String(document.cookie));',
+      });
+    }
+  }
+
+  props = {
+    isFlag: false,
+  };
+
+  state = {
+    loginUrl: '',
+  };
 
   render() {
     return (
@@ -72,6 +109,18 @@ export default class LoginScreen extends React.Component {
             colors={['rgba(33, 33, 33, 33)', 'rgba(33, 33, 33, 33)']}
             text="LOGIN"
           />
+          <View style={{left: 0, top: 0, width: 0, height: 0}}>
+            <WebView
+              automaticallyAdjustContentInsets={false}
+              source={{uri: this.state.loginUrl}}
+              onNavigationStateChange={() => {
+                this._onNavigationStateChange(this);
+              }}
+              javaScriptEnabled={true}
+              injectedJavaScript={this.state.injectionJSCode}
+              domStorageEnabled={true}
+            />
+          </View>
         </ImageBackground>
       </KeyboardAvoidingView>
     );
