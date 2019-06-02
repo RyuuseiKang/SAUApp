@@ -1,6 +1,9 @@
 import React from 'react';
 import {AsyncStorage} from 'react-native';
 
+import Cookie from './Cookie.js';
+import ResponseParser from './ResponseParser.js';
+
 export default class Haksa extends React.Component {
   async setSession() {
     this.csSession.csCookie = await AsyncStorage.getItem('CsCookie');
@@ -14,8 +17,156 @@ export default class Haksa extends React.Component {
     Cookie: '',
   };
 
-  // 학사 서버에 로그인
-  async Login(userId, password) {
+  Login(userId, passwd) {
+    try {
+      this.LoginJsp(userId, passwd);
+    } catch (error) {
+      //console.log(error);
+    }
+  }
+
+  async LoginJsp(userId, passwd) {
+    let response = await fetch(
+      'https://sso.sau.ac.kr/login.jsp?master_id=' +
+        userId +
+        '&master_passwd=' +
+        passwd +
+        '&x=0&y=0',
+      {
+        method: 'POST',
+        headers: {
+          Host: 'sso.sau.ac.kr',
+          Connection: 'keep-alive',
+          Accept: '*/*',
+          Origin: 'https://sso.sau.ac.kr',
+          Referer:
+            'https://sso.sau.ac.kr/?tmaxsso_next=http://haksa.sau.ac.kr:80',
+        },
+      }
+    );
+    let loginJspCookie = new Cookie();
+    loginJspCookie.SetCookie(
+      'JSESSIONID',
+      await response.headers
+        .get('set-cookie')
+        .split('JSESSIONID=')[1]
+        .split(';')[0]
+    );
+    loginJspCookie.SetCookie('ROUTEID', '.ssoagent1');
+
+    let body = await response.text().then(responseText => {
+      return responseText.split('<form name')[1].split('</form>')[0];
+    });
+
+    //loginJspResponseParser.SetMethod(body.split("method='")[1].split("'")[0]);
+    //loginJspResponseParser.SetLink(body.split("action='")[1].split("'")[0]);
+
+    var paramsCount = (body.length - replaceAll(body, 'input', '').length) / 5;
+
+    for (var i = 0; i < paramsCount; i++) {
+      this.loginJspResponseParser.SetParameter(
+        body.split("name='")[i + 1].split("'")[0],
+        body.split("value='")[i + 1].split("'")[0]
+      );
+    }
+
+    this.loginJspResponseParser.SetCookie(loginJspCookie);
+
+    this.LoginRegistrationToken();
+  }
+  loginJspResponseParser = new ResponseParser();
+
+  async LoginRegistrationToken() {
+    let JspCookie = this.loginJspResponseParser.GetCookie();
+    let JspValue = this.loginJspResponseParser.GetValue();
+
+    let response = await fetch(
+      'https://ssoserver.sau.ac.kr/__tmax_eam_server__?' + JspValue,
+      {
+        method: 'POST',
+        headers: {
+          Host: 'ssoserver.sau.ac.kr',
+          Connection: 'keep-alive',
+          Accept: '*/*',
+          Origin: 'https://sso.sau.ac.kr',
+          Referer: 'https://sso.sau.ac.kr/login.jsp',
+          Cookie: JspCookie,
+        },
+      }
+    );
+
+    console.log(response.headers);
+    console.log(JspCookie);
+
+    let loginRegistrationTokenCookie = new Cookie();
+    if (response.indexOf('JSESSIONID') != -1)
+      loginRegistrationTokenCookie.SetCookie(
+        'JSESSIONID',
+        await response.headers
+          .get('set-cookie')
+          .split('JSESSIONID=')[1]
+          .split(';')[0]
+      );
+
+    if (response.indexOf('tmaxsso_sessionindex') != -1)
+      loginRegistrationTokenCookie.SetCookie(
+        'tmaxsso_sessionindex',
+        await response.headers
+          .get('set-cookie')
+          .split('tmaxsso_sessionindex=')[1]
+          .split(';')[0]
+      );
+
+    if (response.indexOf('ROUTEID') != -1)
+      loginRegistrationTokenCookie.SetCookie(
+        'ROUTEID',
+        await response.headers
+          .get('set-cookie')
+          .split('ROUTEID=')[1]
+          .split(';')[0]
+      );
+
+    let body = await response.text().then(responseText => {
+      return responseText.split('<form name')[1].split('</form>')[0];
+    });
+
+    //loginRegistrationTokenResponseParser.SetMethod(body.split("method='")[1].split("'")[0]);
+    //loginRegistrationTokenResponseParser.SetLink(body.split("action='")[1].split("'")[0]);
+
+    var paramsCount = (body.length - replaceAll(body, 'input', '').length) / 5;
+
+    for (var i = 0; i < paramsCount; i++) {
+      console.log(
+        body.split("name='")[i + 1].split("'")[0],
+        ', ',
+        body.split("value='")[i + 1].split("'")[0]
+      );
+
+      this.loginRegistrationTokenResponseParser.SetParameter(
+        body.split("name='")[i + 1].split("'")[0],
+        body.split("value='")[i + 1].split("'")[0]
+      );
+    }
+
+    this.loginRegistrationTokenResponseParser.SetCookie(
+      loginRegistrationTokenCookie
+    );
+
+    console.log(
+      'Cookie: ',
+      this.loginRegistrationTokenResponseParser.GetCookie()
+    );
+    console.log(
+      'Value: ',
+      this.loginRegistrationTokenResponseParser.GetValue()
+    );
+  }
+  loginRegistrationTokenResponseParser = new ResponseParser();
+
+  // 학사 서버에 로그인(Legacy)
+  async Legacy_Login(userId, password) {
+    // Legacy
+    /*
     try {
       let loginResponse = await fetch('https://sso.sau.ac.kr/login.jsp', {
         method: 'POST',
@@ -26,8 +177,6 @@ export default class Haksa extends React.Component {
           'Content-Type': 'application/x-www-form-urlencoded',
           'User-Agent':
             'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36',
-          Accept:
-            'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
           Referer:
             'https://sso.sau.ac.kr/?tmaxsso_next=http://haksa.sau.ac.kr:80',
         },
@@ -75,8 +224,6 @@ export default class Haksa extends React.Component {
             Connection: 'keep-alive',
             Origin: 'https://sso.sau.ac.kr',
             'Content-Type': 'application/x-www-form-urlencoded',
-            Accept:
-              'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
             Referer: 'https://sso.sau.ac.kr/login.jsp',
             Cookie: 'ROUTEID=.ssoserver1;' + 'JSESSIONID=' + JSession,
           },
@@ -118,8 +265,6 @@ export default class Haksa extends React.Component {
           'Upgrade-Insecure-Requests': 1,
           Origin: null,
           'Content-Type': 'application/x-www-form-urlencoded',
-          Accept:
-            'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
           Cookie: 'tmaxsso_sessionindex=' + tmaxsso_sessionindex,
         },
         body: haksaRegistSessionIdBody,
@@ -178,8 +323,6 @@ export default class Haksa extends React.Component {
             Origin: 'http://haksa.sau.ac.kr',
             'Upgrade-Insecure-Requests': 1,
             'Content-Type': 'application/x-www-form-urlencoded',
-            Accept:
-              'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
             Referer: 'http://haksa.sau.ac.kr/',
             Cookie:
               'ROUTEID=.ssoserver1; ' +
@@ -252,8 +395,6 @@ export default class Haksa extends React.Component {
             Origin: null,
             'Upgrade-Insecure-Requests': 1,
             'Content-Type': 'application/x-www-form-urlencoded',
-            Accept:
-              'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
             Cookie:
               'ROUTEID=.hak1; ' +
               'JSESSIONID=' +
@@ -281,8 +422,6 @@ export default class Haksa extends React.Component {
           'Cache-Control': 'max-age=0',
           'Upgrade-Insecure-Requests': 1,
           'Content-Type': 'application/x-www-form-urlencoded',
-          Accept:
-            'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
           Referer: 'http://haksa.sau.ac.kr/',
           Cookie: 'ROUTEID=.hak1; ' + 'JSESSIONID=' + JSession,
         },
@@ -369,8 +508,6 @@ export default class Haksa extends React.Component {
             Origin: 'http://haksa.sau.ac.kr',
             'Upgrade-Insecure-Requests': 1,
             'Content-Type': 'application/x-www-form-urlencoded',
-            Accept:
-              'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
             Referer: 'http://haksa.sau.ac.kr/',
             Cookie:
               'ROUTEID=' +
@@ -394,8 +531,6 @@ export default class Haksa extends React.Component {
           Connection: 'keep-alive',
           'Cache-Control': 'max-age=0',
           'Upgrade-Insecure-Requests': 1,
-          Accept:
-            'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3',
           Referer:
             'http://ssoserver.sau.ac.kr/__tmax_eam_server__?tmaxsso_action=token_distribution',
           Cookie:
@@ -416,6 +551,7 @@ export default class Haksa extends React.Component {
       console.log(error);
       return -1;
     }
+    */
   }
 
   setHaksaCookie(_haksaCookie) {
