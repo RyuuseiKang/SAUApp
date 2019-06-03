@@ -17,7 +17,7 @@ export default class Haksa extends React.Component {
     Cookie: '',
   };
 
-  Login(userId, passwd) {
+  async Login(userId, passwd) {
     try {
       this.LoginJsp(userId, passwd);
     } catch (error) {
@@ -26,6 +26,9 @@ export default class Haksa extends React.Component {
   }
 
   cookie = new Cookie();
+  responseParser = new ResponseParser();
+
+  // TODO: LoginJsp
   async LoginJsp(userId, passwd) {
     let response = await fetch(
       'https://sso.sau.ac.kr/login.jsp?master_id=' +
@@ -42,30 +45,39 @@ export default class Haksa extends React.Component {
           Origin: 'https://sso.sau.ac.kr',
           Referer:
             'https://sso.sau.ac.kr/?tmaxsso_next=http://haksa.sau.ac.kr:80',
+          'User-Agent': 'SAUApp/0.1',
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
       }
     );
 
-    cookie.SetCookie(
+    this.cookie.SetCookie(
       'JSESSIONID',
       await response.headers
         .get('set-cookie')
         .split('JSESSIONID=')[1]
         .split(';')[0]
     );
-    cookie.SetCookie('ROUTEID', '.ssoagent1');
+
+    this.cookie.SetCookie(
+      'ROUTEID',
+      await response.headers
+        .get('set-cookie')
+        .split('ROUTEID=')[1]
+        .split(';')[0]
+    );
 
     let body = await response.text().then(responseText => {
       return responseText.split('<form name')[1].split('</form>')[0];
     });
 
-    //loginJspResponseParser.SetMethod(body.split("method='")[1].split("'")[0]);
-    //loginJspResponseParser.SetLink(body.split("action='")[1].split("'")[0]);
+    //responseParser.SetMethod(body.split("method='")[1].split("'")[0]);
+    //responseParser.SetLink(body.split("action='")[1].split("'")[0]);
 
     var paramsCount = (body.length - replaceAll(body, 'input', '').length) / 5;
 
     for (var i = 0; i < paramsCount; i++) {
-      this.loginJspResponseParser.SetParameter(
+      this.responseParser.SetParameter(
         body.split("name='")[i + 1].split("'")[0],
         body.split("value='")[i + 1].split("'")[0]
       );
@@ -73,11 +85,11 @@ export default class Haksa extends React.Component {
 
     this.LoginRegistrationToken();
   }
-  loginJspResponseParser = new ResponseParser();
 
+  // TODO: LoginRegistrationToken
   async LoginRegistrationToken() {
     let JspCookie = this.cookie.GetCookie();
-    let JspValue = this.loginJspResponseParser.GetValue();
+    let JspValue = this.responseParser.GetValue();
 
     let response = await fetch(
       'https://ssoserver.sau.ac.kr/__tmax_eam_server__?' + JspValue,
@@ -89,12 +101,13 @@ export default class Haksa extends React.Component {
           Accept: '*/*',
           Origin: 'https://sso.sau.ac.kr',
           Referer: 'https://sso.sau.ac.kr/login.jsp',
+          'User-Agent': 'SAUApp/0.1',
           Cookie: JspCookie,
         },
       }
     );
 
-    cookie.SetCookie(
+    this.cookie.SetCookie(
       'tmaxsso_sessionindex',
       await response.headers
         .get('set-cookie')
@@ -102,479 +115,192 @@ export default class Haksa extends React.Component {
         .split(';')[0]
     );
 
+    this.cookie.SetCookie(
+      'ROUTEID',
+      await response.headers
+        .get('set-cookie')
+        .split('ROUTEID=')[1]
+        .split(';')[0]
+    );
+
+    this.cookie.DeleteCookie('JSESSIONID');
+
     let body = await response.text().then(responseText => {
       return responseText.split('<form name')[1].split('</form>')[0];
     });
 
-    //loginRegistrationTokenResponseParser.SetMethod(body.split("method='")[1].split("'")[0]);
-    //loginRegistrationTokenResponseParser.SetLink(body.split("action='")[1].split("'")[0]);
+    //responseParser.SetMethod(body.split("method='")[1].split("'")[0]);
+    //responseParser.SetLink(body.split("action='")[1].split("'")[0]);
+    this.responseParser.Clear();
 
     var paramsCount = (body.length - replaceAll(body, 'input', '').length) / 5;
 
     for (var i = 0; i < paramsCount; i++) {
-      this.loginRegistrationTokenResponseParser.SetParameter(
+      this.responseParser.SetParameter(
         body.split("name='")[i + 1].split("'")[0],
         body.split("value='")[i + 1].split("'")[0]
       );
     }
 
-    console.log(
-      'Cookie: ',
-      this.loginRegistrationTokenResponseParser.GetCookie()
-    );
-    console.log(
-      'Value: ',
-      this.loginRegistrationTokenResponseParser.GetValue()
-    );
-
-    this.LoginRegistrationToken();
+    this.LoginRegistrationSession();
   }
-  loginRegistrationTokenResponseParser = new ResponseParser();
 
-  async LoginRegistrationSession(){
+  // TODO: LoginRegistrationSession
+  async LoginRegistrationSession() {
     let JspCookie = this.cookie.GetCookie();
-    let JspValue = this.loginJspResponseParser.GetValue();
+    let JspValue = this.responseParser.GetValue();
+
+    let response = await fetch('http://haksa.sau.ac.kr/?' + JspValue, {
+      method: 'POST',
+      headers: {
+        Host: 'haksa.sau.ac.kr',
+        Connection: 'keep-alive',
+        Accept: '*/*',
+        Origin: 'null',
+        'User-Agent': 'SAUApp/0.1',
+        Cookie: JspCookie,
+      },
+    });
+
+    this.cookie.SetCookie(
+      'JSESSIONID',
+      await response.headers
+        .get('set-cookie')
+        .split('JSESSIONID=')[1]
+        .split(';')[0]
+    );
+
+    this.cookie.SetCookie(
+      'ROUTEID',
+      await response.headers
+        .get('set-cookie')
+        .split('ROUTEID=')[1]
+        .split(';')[0]
+    );
+
+    let body = await response.text().then(responseText => {
+      return responseText.split('<form name')[1].split('</form>')[0];
+    });
+
+    //responseParser.SetMethod(body.split("method='")[1].split("'")[0]);
+    //responseParser.SetLink(body.split("action='")[1].split("'")[0]);
+    this.responseParser.Clear();
+
+    var paramsCount = (body.length - replaceAll(body, 'input', '').length) / 5;
+
+    for (var i = 0; i < paramsCount; i++) {
+      this.responseParser.SetParameter(
+        body.split("name='")[i + 1].split("'")[0],
+        body.split("value='")[i + 1].split("'")[0]
+      );
+    }
+
+    this.LoginDistributionToken();
+  }
+
+  // TODO: LoginDistributionToken
+  async LoginDistributionToken() {
+    let JspCookie = this.cookie.GetCookie();
+    let JspValue = this.responseParser.GetValue();
 
     let response = await fetch(
-      'http://haksa.sau.ac.kr/?' + JspValue,
+      'http://ssoserver.sau.ac.kr/__tmax_eam_server__?' + JspValue,
+      {
+        method: 'POST',
+        headers: {
+          Host: 'ssoserver.sau.ac.kr',
+          Connection: 'keep-alive',
+          Accept: '*/*',
+          Origin: 'http://haksa.sau.ac.kr',
+          Referer: 'http://haksa.sau.ac.kr/',
+          'User-Agent': 'SAUApp/0.1',
+          Cookie: JspCookie,
+        },
+      }
+    );
+
+    this.cookie.SetCookie(
+      'ROUTEID',
+      await response.headers
+        .get('set-cookie')
+        .split('ROUTEID=')[1]
+        .split(';')[0]
+    );
+
+    let body = await response.text().then(responseText => {
+      return responseText.split('<form name')[1].split('</form>')[0];
+    });
+
+    this.responseParser.Clear();
+
+    var paramsCount = (body.length - replaceAll(body, 'input', '').length) / 5;
+
+    for (var i = 0; i < paramsCount; i++) {
+      this.responseParser.SetParameter(
+        body.split("name='")[i + 1].split("'")[0],
+        body.split("value='")[i + 1].split("'")[0]
+      );
+    }
+
+    this.LoginCm();
+  }
+
+  // TODO: LoginCm
+  async LoginCm() {
+    let JspCookie = this.cookie.GetCookie();
+    let JspValue = this.responseParser.GetValue();
+
+    let response = await fetch(
+      'http://haksa.sau.ac.kr/jsp/Tlogin/login_cm.jsp?' + JspValue,
       {
         method: 'POST',
         headers: {
           Host: 'haksa.sau.ac.kr',
           Connection: 'keep-alive',
           Accept: '*/*',
-          Origin: 'null',
+          Origin: 'http://ssoserver.sau.ac.kr',
+          Referer:
+            'http://ssoserver.sau.ac.kr/__tmax_eam_server__?tmaxsso_action=token_distribution',
+          'User-Agent': 'SAUApp/0.1',
+          'accept-encoding': 'gzip, deflate',
           Cookie: JspCookie,
         },
       }
     );
 
     cookie.SetCookie(
-      'tmaxsso_sessionindex',
+      'ROUTEID',
       await response.headers
         .get('set-cookie')
-        .split('tmaxsso_sessionindex=')[1]
+        .split('ROUTEID=')[1]
         .split(';')[0]
     );
 
-    let body = await response.text().then(responseText => {
-      return responseText.split('<form name')[1].split('</form>')[0];
-    });
+    let body = await response;
 
-    //loginRegistrationTokenResponseParser.SetMethod(body.split("method='")[1].split("'")[0]);
-    //loginRegistrationTokenResponseParser.SetLink(body.split("action='")[1].split("'")[0]);
+    console.log('LoginCm Body:', body.indexOf('환영합니다'));
 
-    var paramsCount = (body.length - replaceAll(body, 'input', '').length) / 5;
-
-    for (var i = 0; i < paramsCount; i++) {
-      this.loginRegistrationTokenResponseParser.SetParameter(
-        body.split("name='")[i + 1].split("'")[0],
-        body.split("value='")[i + 1].split("'")[0]
-      );
-    }
-
-    console.log(
-      'Cookie: ',
-      this.loginRegistrationTokenResponseParser.GetCookie()
-    );
-    console.log(
-      'Value: ',
-      this.loginRegistrationTokenResponseParser.GetValue()
-    );
-
-    this.LoginRegistrationToken();
+    // this.
   }
-  loginRegistrationSessionParser = new ResponseParser();
 
-  // 학사 서버에 로그인(Legacy)
-  async Legacy_Login(userId, password) {
-    // Legacy
-    /*
-    try {
-      let loginResponse = await fetch('https://sso.sau.ac.kr/login.jsp', {
-        method: 'POST',
-        headers: {
-          Host: 'sso.sau.ac.kr',
-          Connection: 'keep-alive',
-          Origin: 'https://sso.sau.ac.kr',
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'User-Agent':
-            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36',
-          Referer:
-            'https://sso.sau.ac.kr/?tmaxsso_next=http://haksa.sau.ac.kr:80',
-        },
-        body:
-          'master_id=' +
-          userId +
-          '&master_passwd=' +
-          password +
-          '&x=0' +
-          '&y=0',
-        json: true,
-      });
-      var JSession = await loginResponse.headers
-        .get('set-cookie')
-        .split('JSESSIONID=')[1]
-        .split(';')[0];
-
-      var tmaxeamfmRegistry = await loginResponse.text().then(responseText => {
-        return responseText.split('<form ')[1].split('</form>')[0];
-      });
-
-      // 여기까지 tmaxeamfmRegistry 등록부 수신 처리
-
-      let tokenRegistrationBody =
-        'tmaxsso_enco=utf-8&tmaxsso_tokn=' +
-        tmaxeamfmRegistry.split("tmaxsso_tokn' value='")[1].split("'")[0] +
-        '&tmaxsso_next=' +
-        tmaxeamfmRegistry.split("tmaxsso_next' value='")[1].split("'")[0] +
-        '&tmaxsso_clienitip=' +
-        tmaxeamfmRegistry.split("tmaxsso_clienitip' value='")[1].split("'")[0] +
-        '&tmaxsso_logout=' +
-        tmaxeamfmRegistry.split("tmaxsso_logout' value='")[1].split("'")[0] +
-        '&tmaxsso_serv=' +
-        tmaxeamfmRegistry.split("tmaxsso_serv' value='")[1].split("'")[0] +
-        '&tmaxsso_action=token_registration';
-
-      let tokenRegistrationResponse = await fetch(
-        'https://ssoserver.sau.ac.kr/__tmax_eam_server__?tmaxsso_action=token_registration',
-        {
-          method: 'POST',
-          headers: {
-            Host: 'ssoserver.sau.ac.kr',
-            'User-Agent':
-              'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36',
-            Connection: 'keep-alive',
-            Origin: 'https://sso.sau.ac.kr',
-            'Content-Type': 'application/x-www-form-urlencoded',
-            Referer: 'https://sso.sau.ac.kr/login.jsp',
-            Cookie: 'ROUTEID=.ssoserver1;' + 'JSESSIONID=' + JSession,
-          },
-          body: tokenRegistrationBody,
-        }
-      );
-
-      var tmaxsso_sessionindex = await tokenRegistrationResponse.headers
-        .get('set-cookie')
-        .split('tmaxsso_sessionindex=')[1]
-        .split(';')[0];
-
-      var tmaxeamfmHaksa = await tokenRegistrationResponse
-        .text()
-        .then(responseText => {
-          return responseText.split('<form ')[1].split('</form>')[0];
-        });
-
-      // 여기까지 tmaxeamfmHaksa 등록부 송신 처리 및 토큰 분할 값 수신
-
-      let haksaRegistSessionIdBody =
-        'PARAM_OPERATION_TYPE=' +
-        tmaxeamfmHaksa.split("PARAM_OPERATION_TYPE' value='")[1].split("'")[0] +
-        '&tmaxsso_sessionindex=' +
-        tmaxeamfmHaksa.split("tmaxsso_sessionindex' value='")[1].split("'")[0] +
-        '&tmaxsso_clienitip=' +
-        tmaxeamfmHaksa.split("tmaxsso_clienitip' value='")[1].split("'")[0] +
-        '&tmaxsso_sessionid=' +
-        tmaxeamfmHaksa.split("tmaxsso_sessionid' value='")[1].split("'")[0];
-
-      let haksaRegistSessionResponse = await fetch('http://haksa.sau.ac.kr/', {
+  // TODO: GetHaksa
+  async GetHaksa() {
+    let response = await fetch(
+      'http://haksa.sau.ac.kr/jsp/haksa/hak_e0_ma0.jsp',
+      {
         method: 'POST',
         headers: {
           Host: 'haksa.sau.ac.kr',
-          'User-Agent':
-            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36',
           Connection: 'keep-alive',
-          'Cache-Control': 'max-age=0',
-          'Upgrade-Insecure-Requests': 1,
-          Origin: null,
-          'Content-Type': 'application/x-www-form-urlencoded',
-          Cookie: 'tmaxsso_sessionindex=' + tmaxsso_sessionindex,
+          Accept: '*/*',
+          'User-Agent': 'SAUApp/0.1',
+          'accept-encoding': 'gzip, deflate',
+          Cookie: this.cookie.GetCookie(),
         },
-        body: haksaRegistSessionIdBody,
-      });
-      JSession = await haksaRegistSessionResponse.headers
-        .get('set-cookie')
-        .split('JSESSIONID=')[1]
-        .split(';')[0];
-
-      var tmaxeamfmDistribution = await haksaRegistSessionResponse
-        .text()
-        .then(responseText => {
-          return responseText.split('<form ')[1].split('</form>')[0];
-        });
-
-      let tokenDistributionBody =
-        'tmaxsso_action=' +
-        tmaxeamfmDistribution
-          .split("tmaxsso_action' value='")[1]
-          .split("'")[0] +
-        '&tmaxsso_rtrn=' +
-        tmaxeamfmDistribution.split("tmaxsso_rtrn' value='")[1].split("'")[0] +
-        '&tmaxsso_serv=' +
-        tmaxeamfmDistribution.split("tmaxsso_serv' value='")[1].split("'")[0] +
-        '&tmaxsso_sessionindex=' +
-        tmaxeamfmDistribution
-          .split("tmaxsso_sessionindex' value='")[1]
-          .split("'")[0] +
-        '&tmaxsso_checksingle=' +
-        tmaxeamfmDistribution
-          .split("tmaxsso_checksingle' value='")[1]
-          .split("'")[0] +
-        '&tmaxsso_ttype=' +
-        tmaxeamfmDistribution.split("tmaxsso_ttype' value='")[1].split("'")[0] +
-        '&tmaxsso_logout=' +
-        tmaxeamfmDistribution
-          .split("tmaxsso_logout' value='")[1]
-          .split("'")[0] +
-        '&tmaxsso_method=' +
-        tmaxeamfmDistribution
-          .split("tmaxsso_method' value='")[1]
-          .split("'")[0] +
-        '&tmaxsso_next=' +
-        tmaxeamfmDistribution.split("tmaxsso_next' value='")[1].split("'")[0];
-
-      let tokenDistributionResponse = await fetch(
-        'http://ssoserver.sau.ac.kr/__tmax_eam_server__?tmaxsso_action=token_distribution',
-        {
-          method: 'POST',
-          headers: {
-            Host: 'ssoserver.sau.ac.kr',
-            'User-Agent':
-              'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36',
-            Connection: 'keep-alive',
-            'Cache-Control': 'max-age=0',
-            Origin: 'http://haksa.sau.ac.kr',
-            'Upgrade-Insecure-Requests': 1,
-            'Content-Type': 'application/x-www-form-urlencoded',
-            Referer: 'http://haksa.sau.ac.kr/',
-            Cookie:
-              'ROUTEID=.ssoserver1; ' +
-              'JSESSIONID=' +
-              JSession +
-              '; tmaxsso_sessionindex=' +
-              tmaxsso_sessionindex,
-          },
-          body: tokenDistributionBody,
-        }
-      );
-      JSession = await tokenDistributionResponse.headers
-        .get('set-cookie')
-        .split('JSESSIONID=')[1]
-        .split(';')[0];
-
-      var tmaxeamfmLoginCm = await tokenDistributionResponse
-        .text()
-        .then(responseText => {
-          return responseText.split('<form ')[1].split('</form>')[0];
-        });
-
-      // 여기까지 tmaxeamfmHaksa 분할부 송신 처리 및 토큰 분할 값 수신
-      // 여기서부터 토큰 주고받고 검증
-
-      tmaxsso_sessionindex = tmaxeamfmLoginCm
-        .split("tmaxsso_sessionindex' value='")[1]
-        .split("'")[0];
-
-      let loginCmBody =
-        'tmaxsso_action=' +
-        tmaxeamfmLoginCm.split("tmaxsso_action' value='")[1].split("'")[0] +
-        '&tmaxsso_tokn=' +
-        tmaxeamfmLoginCm.split("tmaxsso_tokn' value='")[1].split("'")[0] +
-        '&tmaxsso_sessionid=' +
-        tmaxeamfmLoginCm.split("tmaxsso_sessionid' value='")[1].split("'")[0] +
-        '&tmaxsso_rtrn=' +
-        tmaxeamfmLoginCm.split("tmaxsso_rtrn' value='")[1].split("'")[0] +
-        '&tmaxsso_serv=' +
-        tmaxeamfmLoginCm.split("tmaxsso_serv' value='")[1].split("'")[0] +
-        '&tmaxsso_sessionindex=' +
-        tmaxsso_sessionindex +
-        '&tmaxsso_ttype=' +
-        tmaxeamfmLoginCm.split("tmaxsso_ttype' value='")[1].split("'")[0] +
-        '&tmaxsso_checksingle=' +
-        tmaxeamfmLoginCm
-          .split("tmaxsso_checksingle' value='")[1]
-          .split("'")[0] +
-        '&PARAM_OPERATION_TYPE=' +
-        tmaxeamfmLoginCm
-          .split("PARAM_OPERATION_TYPE' value='")[1]
-          .split("'")[0] +
-        '&tmaxsso_logout=' +
-        tmaxeamfmLoginCm.split("tmaxsso_logout' value='")[1].split("'")[0];
-      '&tmaxsso_method=' +
-        tmaxeamfmLoginCm.split("tmaxsso_method' value='")[1].split("'")[0];
-      '&tmaxsso_next=' +
-        tmaxeamfmLoginCm.split("tmaxsso_next' value='")[1].split("'")[0];
-
-      let loginCmResponse = await fetch(
-        'http://haksa.sau.ac.kr/jsp/Tlogin/login_cm.jsp',
-        {
-          method: 'POST',
-          headers: {
-            Host: 'haksa.sau.ac.kr',
-            'User-Agent':
-              'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36',
-            Connection: 'keep-alive',
-            'Cache-Control': 'max-age=0',
-            Origin: null,
-            'Upgrade-Insecure-Requests': 1,
-            'Content-Type': 'application/x-www-form-urlencoded',
-            Cookie:
-              'ROUTEID=.hak1; ' +
-              'JSESSIONID=' +
-              JSession +
-              '; tmaxsso_sessionindex=' +
-              tmaxsso_sessionindex,
-          },
-          body: loginCmBody,
-        }
-      );
-
-      // 여기서 잠깐 테스트
-      JSession = await loginCmResponse.headers
-        .get('set-cookie')
-        .split('JSESSIONID=')[1]
-        .split(';')[0];
-
-      let testResponse = await fetch('http://haksa.sau.ac.kr/blank.jsp', {
-        method: 'GET',
-        headers: {
-          Host: 'haksa.sau.ac.kr',
-          'User-Agent':
-            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36',
-          Connection: 'keep-alive',
-          'Cache-Control': 'max-age=0',
-          'Upgrade-Insecure-Requests': 1,
-          'Content-Type': 'application/x-www-form-urlencoded',
-          Referer: 'http://haksa.sau.ac.kr/',
-          Cookie: 'ROUTEID=.hak1; ' + 'JSESSIONID=' + JSession,
-        },
-      });
-
-      // 여기까지 마지막으로 토큰 분할 정보 송신
-      // 아래로는 정상 접속 테스트
-
-      var roundingToken = loginCmResponse;
-
-      var routedId = '.ssoserver1';
-
-      var isLogin = false;
-      for (var m = 0; m < 3; m++) {
-        //console.log(await roundingToken);
-        try {
-          var roundingTokenData = await roundingToken
-            .text()
-            .then(responseText => {
-              return responseText.split('<form name')[1].split('</form>')[0];
-            });
-
-          JSession = await roundingToken.headers
-            .get('set-cookie')
-            .split('JSESSIONID=')[1]
-            .split(';')[0];
-
-          routedId = await roundingToken.headers
-            .get('set-cookie')
-            .split('ROUTEID=')[1]
-            .split(';')[0];
-
-          if (routedId == '.hak1') {
-            isLogin = true;
-            break;
-          }
-        } catch (error) {}
-
-        var action = roundingTokenData.split("action='")[1].split("'")[0];
-        var method = roundingTokenData.split("method='")[1].split("'")[0];
-
-        var parsedBody = '';
-
-        var paramsCount =
-          (roundingTokenData.length -
-            replaceAll(roundingTokenData, 'input', '').length) /
-          5;
-
-        for (var i = 1; i <= paramsCount; i++) {
-          parsedBody =
-            parsedBody +
-            roundingTokenData.split("name='")[i].split("'")[0] +
-            '=';
-          parsedBody =
-            parsedBody +
-            roundingTokenData
-              .split("value='")
-              [i].split("'")[0]
-              .replace('=', '%3D');
-          if (i != paramsCount) parsedBody = parsedBody + '&';
-        }
-
-        console.log('Try this ' + method + ', To: ' + action);
-        console.log(parsedBody);
-        console.log(
-          'Cookie: ',
-          'ROUTEID=' +
-            routedId +
-            '; ' +
-            'JSESSIONID=' +
-            JSession +
-            '; tmaxsso_sessionindex=' +
-            tmaxsso_sessionindex
-        );
-
-        var roundingToken = await fetch(action, {
-          method: method,
-          headers: {
-            Host: action.split('://')[1].split('/')[0],
-            'User-Agent':
-              'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36',
-            Connection: 'keep-alive',
-            'Cache-Control': 'max-age=0',
-            Origin: 'http://haksa.sau.ac.kr',
-            'Upgrade-Insecure-Requests': 1,
-            'Content-Type': 'application/x-www-form-urlencoded',
-            Referer: 'http://haksa.sau.ac.kr/',
-            Cookie:
-              'ROUTEID=' +
-              routedId +
-              '; ' +
-              'JSESSIONID=' +
-              JSession +
-              '; tmaxsso_sessionindex=' +
-              tmaxsso_sessionindex,
-          },
-          body: parsedBody,
-        });
       }
+    );
 
-      let loginHaksaResponse = await fetch('http://haksa.sau.ac.kr/', {
-        method: 'GET',
-        headers: {
-          Host: 'haksa.sau.ac.kr',
-          'User-Agent':
-            'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36',
-          Connection: 'keep-alive',
-          'Cache-Control': 'max-age=0',
-          'Upgrade-Insecure-Requests': 1,
-          Referer:
-            'http://ssoserver.sau.ac.kr/__tmax_eam_server__?tmaxsso_action=token_distribution',
-          Cookie:
-            'ROUTEID=.hak1; ' +
-            'JSESSIONID=' +
-            JSession +
-            '; tmaxsso_sessionindex=' +
-            tmaxsso_sessionindex,
-        },
-      });
-      console.log(loginHaksaResponse);
-
-      // 나중에 쿠키를 통한 자동로그인을 구현
-      this.sauSession.Cookie = 'JSESSIONID=' + JSession;
-
-      return true;
-    } catch (error) {
-      console.log(error);
-      return -1;
-    }
-    */
+    console.log(response);
   }
 
   setHaksaCookie(_haksaCookie) {

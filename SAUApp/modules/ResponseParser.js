@@ -39,6 +39,10 @@ export default class ResponseParser extends React.Component {
     return getValue;
   }
 
+  Clear() {
+    map.clear();
+  }
+
   SetCookie(_cookie) {
     cookie = _cookie;
   }

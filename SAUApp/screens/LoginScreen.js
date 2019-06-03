@@ -29,6 +29,10 @@ export default class LoginScreen extends React.Component {
     // haksa.isAliveCsSession();
   }
 
+  getHaksa() {
+    haksa.GetHaksa();
+  }
+
   state = {
     isLogin: false,
   };
@@ -74,6 +78,12 @@ export default class LoginScreen extends React.Component {
             }}
             colors={['rgba(33, 33, 33, 33)', 'rgba(33, 33, 33, 33)']}
             text="LOGIN"
+          />
+          <Button
+            style={[styles.button]}
+            onPress={this.getHaksa}
+            colors={['rgba(33, 33, 33, 33)', 'rgba(33, 33, 33, 33)']}
+            text="GET HAKSA"
           />
           <View style={{left: 0, top: 0, width: 0, height: 0}}>
             <View />
