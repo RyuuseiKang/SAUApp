@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import {LinearGradient} from 'expo';
 import NowAttendWarning from '../elements/NowAttendWarning.js';
-import AttendElement from '../elements/AttendElement.js';
+import ScheduleElement from '../elements/ScheduleElement.js';
 
 export default class MainScreen extends React.Component {
   render() {
@@ -44,7 +44,8 @@ export default class MainScreen extends React.Component {
           </View>
           <ScrollView style={styles.scrollViewContainer}>
             <NowAttendWarning />
-            <AttendElement />
+            <ScheduleElement />
+            <ScheduleElement />
             <View>
               <Text>여기서부터 오늘 아이템들 시작</Text>
             </View>
