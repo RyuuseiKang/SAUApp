@@ -31,7 +31,7 @@ export default class MainScreen extends React.Component {
             <View
               style={{
                 marginLeft: 'auto',
-                margin: 25,
+                marginRight: 20,
                 justifyContent: 'center',
                 alignContent: 'center',
               }}
@@ -43,13 +43,15 @@ export default class MainScreen extends React.Component {
             </View>
           </View>
           <ScrollView style={styles.scrollViewContainer}>
-            <NowAttendWarning />
-            <ScheduleElement />
-            <ScheduleElement />
-            <View>
-              <Text>여기서부터 오늘 아이템들 시작</Text>
+            <View style={styles.shadow}>
+              <NowAttendWarning />
+              <ScheduleElement />
+              <ScheduleElement />
+              <View>
+                <Text />
+              </View>
+              <Text />
             </View>
-            <Text />
           </ScrollView>
         </SafeAreaView>
       </View>
@@ -70,6 +72,13 @@ const styles = StyleSheet.create({
   scrollViewContainer: {
     width: '100%',
     height: '100%',
+    backgroundColor: '#FCFCFC',
+  },
+  shadow: {
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    shadowColor: '#333',
+    shadowOffset: {height: 8, width: 0},
   },
   todayDate: {
     fontSize: 18,
@@ -82,6 +91,7 @@ const styles = StyleSheet.create({
     fontSize: 40,
     marginLeft: 20,
     fontWeight: 'bold',
+    marginBottom: 10,
   },
 });
 

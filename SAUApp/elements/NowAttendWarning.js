@@ -5,11 +5,28 @@ import {Icon} from 'react-native-elements';
 export default class NowAttendWarning extends React.Component {
   render() {
     return (
-      <View style={styles.container}>
-        <View style={styles.inContainer}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'stretch',
+          borderRadius: 5,
+          backgroundColor: '#FFF562',
+          margin: 10,
+          marginTop: 5,
+        }}
+      >
+        <View
+          style={{
+            justifyContent: 'center',
+            alignContent: 'center',
+            flexDirection: 'row',
+            margin: 10,
+          }}
+        >
           <Icon name="exclamation-triangle" type="font-awesome" size={15} />
-          <Text style={{fontSize: 17, margin: 10, marginLeft: 5}}>
-            현재 수업이 진행중이지만 출석되어 있지 않습니다.
+          <View width={10} />
+          <Text style={{fontSize: 17}}>
+            수업이 진행중이지만 출석이 되어있지 않습니다.
           </Text>
         </View>
       </View>
@@ -17,19 +34,26 @@ export default class NowAttendWarning extends React.Component {
   }
 }
 
+// <View style={styles.container}>
+// <View style={styles.inContainer}>
+//   <Icon name="exclamation-triangle" type="font-awesome" size={15} />
+//   <Text style={{fontSize: 17, margin: 5, marginLeft: 5}}>
+//     현재 수업이 진행중이지만 출석되어 있지 않습니다.
+//   </Text>
+// </View>
+// </View>
+
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
-    alignItems: 'center',
-    marginBottom: 5,
-  },
-  inContainer: {
     flexDirection: 'row',
     alignItems: 'stretch',
-    justifyContent: 'center',
     backgroundColor: '#FFF562',
-    marginLeft: 5,
-    marginRight: 5,
-    padding: 10,
+    margin: 10,
+  },
+  inContainer: {
+    justifyContent: 'center',
+    alignContent: 'center',
+    flexDirection: 'row',
+    margin: 10,
   },
 });

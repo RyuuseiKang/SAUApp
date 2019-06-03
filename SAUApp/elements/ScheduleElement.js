@@ -5,12 +5,22 @@ import {LinearGradient} from 'expo';
 import StatusDot from '../components/StatusDot.js';
 
 export default class ScheduleElement extends React.Component {
+  state = {
+    LectureName: '네트워크',
+    location: '본관 405호',
+    date: Date(),
+  };
   render() {
     return (
       <View
         style={{
           flexDirection: 'row',
           alignItems: 'stretch',
+          backgroundColor: '#FFF',
+          margin: 5,
+          marginLeft: 10,
+          marginRight: 10,
+          borderRadius: 5,
         }}
       >
         <View
@@ -22,17 +32,17 @@ export default class ScheduleElement extends React.Component {
           }}
         >
           <View style={{justifyContent: 'center'}}>
-            <StatusDot size={15} backgroundColor={'#EB3A25'} margin={10} />
+            <View />
           </View>
           <View style={{}}>
-            <Text style={styles.lesson}>수업 이름</Text>
-            <Text style={styles.location}>강의실 위치</Text>
+            <Text style={styles.lesson}>{this.state.LectureName}</Text>
+            <Text style={styles.location}>{this.state.location}</Text>
           </View>
         </View>
         <View
           style={{
             marginLeft: 'auto',
-            margin: 25,
+            margin: 20,
             justifyContent: 'center',
           }}
         >
@@ -42,6 +52,8 @@ export default class ScheduleElement extends React.Component {
     );
   }
 }
+
+// <StatusDot size={15} backgroundColor={'#EB3A25'} margin={10} />
 
 const styles = StyleSheet.create({
   container: {
