@@ -18,8 +18,28 @@ import {Icon} from 'react-native-elements';
 
 import TodayView from '../elements/TodayView.js';
 import ScheduleView from '../elements/ScheduleView.js';
+import TabView from '../elements/TabView.js';
 
 export default class MainScreen extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.openTab = this.openTab.bind(this);
+  }
+
+  state = {
+    isTabOpen: false,
+    TabValue: deviceWidth * 0.8,
+  };
+
+  openTab() {
+    this.state.isTabOpen = !this.state.isTabOpen;
+
+    if (this.state.isTabOpen)
+      this.TabScrollView.scrollTo({x: deviceWidth * 0.8});
+    else this.TabScrollView.scrollTo({x: 0});
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -30,10 +50,10 @@ export default class MainScreen extends React.Component {
 
         <SafeAreaView>
           <View style={{flexDirection: 'row', alignItems: 'stretch'}}>
-            <View>
-              <Icon name="exclamation-triangle" type="font-awesome" size={50} />
-            </View>
-            <View style={{justifyContent: 'center', alignContent: 'center'}}>
+            <View
+              style={{justifyContent: 'center', alignContent: 'center'}}
+              onTouchEndCapture={this.openTab}
+            >
               <Text style={styles.todayDate}>{getToday()}</Text>
               <Text style={styles.title}>오늘</Text>
               <View />
@@ -60,9 +80,16 @@ export default class MainScreen extends React.Component {
             showsHorizontalScrollIndicator={false}
             style={styles.TabScrollView}
             scrollEventThrottle={32}
+            contentOffset={[this.state.TabValue, 0]}
+            onMomentumScrollEnd={e => {
+              this.state.isTabOpen =
+                e.nativeEvent.contentOffset.x / (deviceWidth * 0.8);
+              console.log('onMomentScrollBegin', this.state.isTabOpen);
+            }}
+            ref={node => (this.TabScrollView = node)}
           >
+            <TabView />
             <TodayView />
-            <ScheduleView />
           </ScrollView>
         </SafeAreaView>
       </View>

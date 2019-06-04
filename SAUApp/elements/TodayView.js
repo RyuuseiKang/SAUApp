@@ -21,10 +21,16 @@ export default class TodayView extends React.Component {
   _onRefresh = () => {
     this.setState({refreshing: true});
     console.log('Refreshing now');
-    fetchData().then(() => {
+    this.fetchData().then(() => {
       this.setState({refreshing: false});
     });
   };
+
+  fetchData = async () => {
+    console.log('fetch');
+    return 0;
+  };
+
   render() {
     return (
       <ScrollView
@@ -33,6 +39,8 @@ export default class TodayView extends React.Component {
           <RefreshControl
             refreshing={this.state.refreshing}
             onRefresh={this._onRefresh}
+            title={'오늘을 갱신합니다.'}
+            size={0}
           />
         }
       >
