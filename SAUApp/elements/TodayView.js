@@ -1,13 +1,41 @@
 import React from 'react';
-import {View, StyleSheet, Text, ScrollView, Dimensions} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Text,
+  ScrollView,
+  Dimensions,
+  RefreshControl,
+} from 'react-native';
 
 import NowAttendWarning from './NowAttendWarning.js';
 import ScheduleElement from './ScheduleElement.js';
 
 export default class TodayView extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      refreshing: false,
+    };
+  }
+  _onRefresh = () => {
+    this.setState({refreshing: true});
+    console.log('Refreshing now');
+    fetchData().then(() => {
+      this.setState({refreshing: false});
+    });
+  };
   render() {
     return (
-      <ScrollView style={styles.scrollViewContainer}>
+      <ScrollView
+        style={styles.scrollViewContainer}
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={this._onRefresh}
+          />
+        }
+      >
         <View style={styles.shadow}>
           <NowAttendWarning />
           <ScheduleElement />

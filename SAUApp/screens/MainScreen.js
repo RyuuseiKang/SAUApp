@@ -10,25 +10,17 @@ import {
   ImageBackground,
   Easing,
   Animated,
+  RefreshControl,
 } from 'react-native';
 import {LinearGradient} from 'expo';
+
+import {Icon} from 'react-native-elements';
+
 import TodayView from '../elements/TodayView.js';
+import ScheduleView from '../elements/ScheduleView.js';
 
 export default class MainScreen extends React.Component {
-  state = {PageScrollPos: new Animated.Value(5)};
-
-  handleScroll(e) {
-    let x = e.nativeEvent.contentOffset.x;
-    let xPos = 5 + (x / deviceWidth) * ((deviceWidth - 10) / TabCount);
-    console.log(this.state.PageScrollPos, ' to ', xPos);
-    Animated.spring(this.state.PageScrollPos, {
-      toValue: xPos,
-      duration: 100,
-    }).start();
-  }
-
   render() {
-    var {PageScrollPos} = this.state;
     return (
       <View style={styles.container}>
         <ImageBackground
@@ -38,17 +30,13 @@ export default class MainScreen extends React.Component {
 
         <SafeAreaView>
           <View style={{flexDirection: 'row', alignItems: 'stretch'}}>
+            <View>
+              <Icon name="exclamation-triangle" type="font-awesome" size={50} />
+            </View>
             <View style={{justifyContent: 'center', alignContent: 'center'}}>
               <Text style={styles.todayDate}>{getToday()}</Text>
               <Text style={styles.title}>오늘</Text>
-              <View>
-                <Animated.View
-                  style={[
-                    styles.tabScrollIndicator,
-                    {marginLeft: PageScrollPos},
-                  ]}
-                />
-              </View>
+              <View />
             </View>
             <View
               style={{
@@ -71,11 +59,10 @@ export default class MainScreen extends React.Component {
             showsVerticalScrollIndicator={false}
             showsHorizontalScrollIndicator={false}
             style={styles.TabScrollView}
-            scrollEventThrottle={60}
-            onScroll={e => this.handleScroll(e)}
+            scrollEventThrottle={32}
           >
             <TodayView />
-            <TodayView />
+            <ScheduleView />
           </ScrollView>
         </SafeAreaView>
       </View>

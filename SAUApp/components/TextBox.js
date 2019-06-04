@@ -8,7 +8,6 @@ import {
   Easing,
   TouchableOpacity,
 } from 'react-native';
-import TextInputState from 'react-native/lib/TextInputState';
 
 export default class TextBox extends React.Component {
   constructor(props) {
