@@ -84,7 +84,6 @@ export default class MainScreen extends React.Component {
             onMomentumScrollEnd={e => {
               this.state.isTabOpen =
                 e.nativeEvent.contentOffset.x / (deviceWidth * 0.8);
-              console.log('onMomentScrollBegin', this.state.isTabOpen);
             }}
             ref={node => (this.TabScrollView = node)}
           >
