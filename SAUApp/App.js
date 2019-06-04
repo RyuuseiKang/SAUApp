@@ -17,6 +17,7 @@ export default class App extends React.Component {
         <ScrollView
           horizontal
           pagingEnabled={true}
+          scrollEnabled={false}
           bounces={false}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}

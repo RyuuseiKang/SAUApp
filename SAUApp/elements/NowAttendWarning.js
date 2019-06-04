@@ -17,16 +17,18 @@ export default class NowAttendWarning extends React.Component {
       >
         <View
           style={{
-            justifyContent: 'center',
-            alignContent: 'center',
+            alignItems: 'center',
             flexDirection: 'row',
             margin: 10,
+            flexWrap: 'wrap',
           }}
         >
-          <Icon name="exclamation-triangle" type="font-awesome" size={15} />
-          <View width={10} />
-          <Text style={{fontSize: 17}}>
-            수업이 진행중이지만 출석이 되어있지 않습니다.
+          <View>
+            <Icon name="exclamation-triangle" type="font-awesome" size={15} />
+          </View>
+          <View width={5} />
+          <Text style={{fontSize: 16}}>
+            현재 수업의 출석이 되어있지 않습니다.
           </Text>
         </View>
       </View>

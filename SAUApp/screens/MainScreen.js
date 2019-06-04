@@ -8,13 +8,27 @@ import {
   SafeAreaView,
   Image,
   ImageBackground,
+  Easing,
+  Animated,
 } from 'react-native';
 import {LinearGradient} from 'expo';
-import NowAttendWarning from '../elements/NowAttendWarning.js';
-import ScheduleElement from '../elements/ScheduleElement.js';
+import TodayView from '../elements/TodayView.js';
 
 export default class MainScreen extends React.Component {
+  state = {PageScrollPos: new Animated.Value(5)};
+
+  handleScroll(e) {
+    let x = e.nativeEvent.contentOffset.x;
+    let xPos = 5 + (x / deviceWidth) * ((deviceWidth - 10) / TabCount);
+    console.log(this.state.PageScrollPos, ' to ', xPos);
+    Animated.spring(this.state.PageScrollPos, {
+      toValue: xPos,
+      duration: 100,
+    }).start();
+  }
+
   render() {
+    var {PageScrollPos} = this.state;
     return (
       <View style={styles.container}>
         <ImageBackground
@@ -27,6 +41,14 @@ export default class MainScreen extends React.Component {
             <View style={{justifyContent: 'center', alignContent: 'center'}}>
               <Text style={styles.todayDate}>{getToday()}</Text>
               <Text style={styles.title}>오늘</Text>
+              <View>
+                <Animated.View
+                  style={[
+                    styles.tabScrollIndicator,
+                    {marginLeft: PageScrollPos},
+                  ]}
+                />
+              </View>
             </View>
             <View
               style={{
@@ -42,16 +64,18 @@ export default class MainScreen extends React.Component {
               />
             </View>
           </View>
-          <ScrollView style={styles.scrollViewContainer}>
-            <View style={styles.shadow}>
-              <NowAttendWarning />
-              <ScheduleElement />
-              <ScheduleElement />
-              <View>
-                <Text />
-              </View>
-              <Text />
-            </View>
+          <ScrollView
+            horizontal
+            pagingEnabled={true}
+            bounces={false}
+            showsVerticalScrollIndicator={false}
+            showsHorizontalScrollIndicator={false}
+            style={styles.TabScrollView}
+            scrollEventThrottle={60}
+            onScroll={e => this.handleScroll(e)}
+          >
+            <TodayView />
+            <TodayView />
           </ScrollView>
         </SafeAreaView>
       </View>
@@ -61,6 +85,7 @@ export default class MainScreen extends React.Component {
 
 var deviceHeight = Dimensions.get('window').height;
 var deviceWidth = Dimensions.get('window').width;
+var TabCount = 2;
 
 const styles = StyleSheet.create({
   container: {
@@ -69,16 +94,11 @@ const styles = StyleSheet.create({
     height: deviceHeight,
     backgroundColor: '#FFF',
   },
-  scrollViewContainer: {
-    width: '100%',
-    height: '100%',
-    backgroundColor: '#FCFCFC',
-  },
-  shadow: {
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    shadowColor: '#333',
-    shadowOffset: {height: 8, width: 0},
+  tabScrollIndicator: {
+    height: 5,
+    width: (deviceWidth - 10) / TabCount,
+    borderRadius: 2.5,
+    backgroundColor: '#555',
   },
   todayDate: {
     fontSize: 18,
@@ -93,6 +113,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
   },
+  TabScrollView: {},
 });
 
 function getToday() {
