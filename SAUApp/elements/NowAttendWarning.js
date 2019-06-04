@@ -11,7 +11,7 @@ export default class NowAttendWarning extends React.Component {
           alignItems: 'stretch',
           borderRadius: 5,
           backgroundColor: '#FFF562',
-          margin: 10,
+          margin: 15,
           marginTop: 5,
         }}
       >

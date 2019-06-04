@@ -33,27 +33,37 @@ export default class TodayView extends React.Component {
 
   render() {
     return (
-      <ScrollView
-        style={styles.scrollViewContainer}
-        refreshControl={
-          <RefreshControl
-            refreshing={this.state.refreshing}
-            onRefresh={this._onRefresh}
-            title={'오늘을 갱신합니다.'}
-            size={0}
-          />
-        }
-      >
-        <View style={styles.shadow}>
-          <NowAttendWarning />
-          <ScheduleElement />
-          <ScheduleElement />
-          <View>
+      <View>
+        <ScrollView
+          style={styles.scrollViewContainer}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this._onRefresh}
+              title={'오늘을 갱신합니다.'}
+              size={0}
+            />
+          }
+        >
+          <View style={styles.shadow}>
+            <NowAttendWarning />
+            <ScheduleElement />
+            <ScheduleElement />
+            <ScheduleElement />
+            <ScheduleElement />
+            <ScheduleElement />
+            <ScheduleElement />
+            <ScheduleElement />
+            <ScheduleElement />
+            <ScheduleElement />
+            <ScheduleElement />
+            <View>
+              <Text />
+            </View>
             <Text />
           </View>
-          <Text />
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </View>
     );
   }
 }
