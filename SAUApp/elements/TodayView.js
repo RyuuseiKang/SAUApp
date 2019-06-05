@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Text,
   ScrollView,
+  ListView,
   Dimensions,
   RefreshControl,
 } from 'react-native';
@@ -33,37 +34,41 @@ export default class TodayView extends React.Component {
 
   render() {
     return (
-      <View>
-        <ScrollView
-          style={styles.scrollViewContainer}
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.refreshing}
-              onRefresh={this._onRefresh}
-              title={'오늘을 갱신합니다.'}
-              size={0}
-            />
-          }
-        >
-          <View style={styles.shadow}>
-            <NowAttendWarning />
-            <ScheduleElement />
-            <ScheduleElement />
-            <ScheduleElement />
-            <ScheduleElement />
-            <ScheduleElement />
-            <ScheduleElement />
-            <ScheduleElement />
-            <ScheduleElement />
-            <ScheduleElement />
-            <ScheduleElement />
-            <View>
-              <Text />
-            </View>
+      <ScrollView
+        style={styles.scrollViewContainer}
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={this._onRefresh}
+            title={'오늘을 갱신합니다.'}
+            progressViewOffset={-20}
+          />
+        }
+      >
+        <View style={styles.shadow}>
+          <NowAttendWarning />
+          <ScheduleElement />
+          <ScheduleElement />
+          <ScheduleElement />
+          <ScheduleElement />
+          <ScheduleElement />
+          <ScheduleElement />
+          <ScheduleElement />
+          <ScheduleElement />
+          <ScheduleElement />
+          <ScheduleElement />
+          <ScheduleElement />
+          <ScheduleElement />
+          <ScheduleElement />
+          <ScheduleElement />
+          <ScheduleElement />
+          <ScheduleElement />
+          <View>
             <Text />
           </View>
-        </ScrollView>
-      </View>
+          <Text />
+        </View>
+      </ScrollView>
     );
   }
 }
@@ -74,7 +79,6 @@ var deviceWidth = Dimensions.get('window').width;
 const styles = StyleSheet.create({
   scrollViewContainer: {
     width: deviceWidth,
-    height: deviceHeight,
     backgroundColor: '#FCFCFC',
   },
   shadow: {

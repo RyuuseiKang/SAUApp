@@ -5,7 +5,6 @@ import {
   Text,
   Dimensions,
   ScrollView,
-  SafeAreaView,
   Image,
   ImageBackground,
   Easing,
@@ -14,11 +13,18 @@ import {
 } from 'react-native';
 import {LinearGradient} from 'expo';
 
+import {SafeAreaView} from 'react-navigation';
+
 import {Icon} from 'react-native-elements';
 
 import TodayView from '../elements/TodayView.js';
 import ScheduleView from '../elements/ScheduleView.js';
 import TabView from '../elements/TabView.js';
+
+var deviceHeight = Dimensions.get('window').height;
+var deviceWidth = Dimensions.get('window').width;
+var TabCount = 2;
+let tabWidth = deviceWidth * 0.6;
 
 export default class MainScreen extends React.Component {
   constructor(props) {
@@ -29,76 +35,81 @@ export default class MainScreen extends React.Component {
 
   state = {
     isTabOpen: false,
-    TabValue: deviceWidth * 0.8,
+    TabValue: tabWidth,
   };
 
   openTab() {
     this.state.isTabOpen = !this.state.isTabOpen;
 
-    if (this.state.isTabOpen)
-      this.TabScrollView.scrollTo({x: deviceWidth * 0.8});
+    if (this.state.isTabOpen) this.TabScrollView.scrollTo({x: tabWidth});
     else this.TabScrollView.scrollTo({x: 0});
   }
 
   render() {
     return (
       <View style={styles.container}>
-        <ImageBackground
-          source={require('../assets/MainPage_Background.jpg')}
-          style={{flex: 1, width: '0%', height: '0%', position: 'absolute'}}
-        />
-
-        <SafeAreaView>
-          <View style={{flexDirection: 'row', alignItems: 'stretch'}}>
+        <SafeAreaView forceInset={{bottom: 'never'}}>
+          <View style={{height: '100%', width: '100%'}}>
             <View
-              style={{justifyContent: 'center', alignContent: 'center'}}
-              onTouchEndCapture={this.openTab}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'stretch',
+              }}
             >
-              <Text style={styles.todayDate}>{getToday()}</Text>
-              <Text style={styles.title}>오늘</Text>
-              <View />
+              <View
+                style={{justifyContent: 'center', alignContent: 'center'}}
+                onTouchEndCapture={this.openTab}
+              >
+                <Text style={styles.todayDate}>{getToday()}</Text>
+                <Text style={styles.title}>오늘</Text>
+                <View />
+              </View>
+              <View
+                style={{
+                  marginLeft: 'auto',
+                  marginRight: 20,
+                  justifyContent: 'center',
+                  alignContent: 'center',
+                }}
+              >
+                <Image
+                  style={{width: 40, height: 40, borderRadius: 20}}
+                  source={require('../assets/MainScreen_people.jpg')}
+                />
+              </View>
             </View>
             <View
               style={{
-                marginLeft: 'auto',
-                marginRight: 20,
-                justifyContent: 'center',
-                alignContent: 'center',
+                height: 1,
+                width: deviceWidth,
+                backgroundColor: '#DDD',
               }}
+            />
+            <ScrollView
+              horizontal
+              pagingEnabled={true}
+              bounces={false}
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
+              style={styles.TabScrollView}
+              scrollEventThrottle={32}
+              contentOffset={[this.state.TabValue, 0]}
+              onMomentumScrollEnd={e => {
+                this.state.isTabOpen = e.nativeEvent.contentOffset.x / tabWidth;
+              }}
+              ref={node => (this.TabScrollView = node)}
             >
-              <Image
-                style={{width: 40, height: 40, borderRadius: 20}}
-                source={require('../assets/MainScreen_people.jpg')}
-              />
-            </View>
+              <TabView style={{width: tabWidth}} />
+              <View>
+                <TodayView />
+              </View>
+            </ScrollView>
           </View>
-          <ScrollView
-            horizontal
-            pagingEnabled={true}
-            bounces={false}
-            showsVerticalScrollIndicator={false}
-            showsHorizontalScrollIndicator={false}
-            style={styles.TabScrollView}
-            scrollEventThrottle={32}
-            contentOffset={[this.state.TabValue, 0]}
-            onMomentumScrollEnd={e => {
-              this.state.isTabOpen =
-                e.nativeEvent.contentOffset.x / (deviceWidth * 0.8);
-            }}
-            ref={node => (this.TabScrollView = node)}
-          >
-            <TabView />
-            <TodayView />
-          </ScrollView>
         </SafeAreaView>
       </View>
     );
   }
 }
-
-var deviceHeight = Dimensions.get('window').height;
-var deviceWidth = Dimensions.get('window').width;
-var TabCount = 2;
 
 const styles = StyleSheet.create({
   container: {
