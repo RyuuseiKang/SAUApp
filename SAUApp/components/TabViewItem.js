@@ -15,12 +15,11 @@ const styles = StyleSheet.create({
   container: {
     padding: 10,
     borderBottomWidth: 0.5,
-    borderBottomColor: '#BBB'
+    borderBottomColor: '#BBB',
     borderTopWidth: 0.5,
     borderTopColor: '#BBB',
   },
   text: {
-    fontSize: 23,
-    fontWeight: 'bold',
+    fontSize: 20,
   },
 });

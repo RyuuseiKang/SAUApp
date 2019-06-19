@@ -13,9 +13,11 @@ import {
 } from 'react-native';
 import {LinearGradient} from 'expo';
 
-import {SafeAreaView} from 'react-navigation';
-
-import {Icon} from 'react-native-elements';
+import {
+  SafeAreaView,
+  createStackNavigator,
+  createAppContainer,
+} from 'react-navigation';
 
 import TodayView from '../elements/TodayView.js';
 import ScheduleView from '../elements/ScheduleView.js';
