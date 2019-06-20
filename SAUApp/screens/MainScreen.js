@@ -44,7 +44,10 @@ export default class MainScreen extends React.Component {
     this.state.isTabOpen = !this.state.isTabOpen;
 
     if (this.state.isTabOpen) this.TabScrollView.scrollTo({x: tabWidth});
-    else this.TabScrollView.scrollTo({x: 0});
+    else {
+      this.TabScrollView.scrollTo({x: 0});
+      this.props.navigation.navigate('Login');
+    }
   }
 
   render() {

@@ -1,5 +1,13 @@
 import React from 'react';
-import {StyleSheet, View, ScrollView, StatusBar} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  ScrollView,
+  StatusBar,
+  AppRegistry,
+} from 'react-native';
+
+import {createSwitchNavigator, createAppContainer} from 'react-navigation';
 
 import Haksa from './modules/Haksa.js';
 
@@ -9,8 +17,18 @@ import ShuttleScreen from './screens/ShuttleScreen.js';
 
 haksa = new Haksa();
 
-export default class App extends React.Component {
+class App extends React.Component {
   render() {
+    const AppContainer = createAppContainer(AppSwitchNavigator);
+
+    if (1 == 1) {
+      //this.props.navigation.navigate('Login');
+      return <AppContainer />;
+    } else {
+      //this.props.navigation.navigate('Main');
+      return <AppContainer />;
+    }
+
     return (
       <View style={styles.container}>
         <StatusBar barStyle="dark-content" />
@@ -22,7 +40,7 @@ export default class App extends React.Component {
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
         >
-          <MainScreen />
+          <AppContainer />
           <LoginScreen />
 
           <ShuttleScreen />
@@ -32,6 +50,8 @@ export default class App extends React.Component {
   }
 }
 
+export default App;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -40,4 +60,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+});
+
+const AppSwitchNavigator = new createSwitchNavigator({
+  Main: {screen: MainScreen},
+  Login: {screen: LoginScreen},
+  Shuttle: {screen: ShuttleScreen},
 });
