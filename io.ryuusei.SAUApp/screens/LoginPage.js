@@ -11,9 +11,6 @@ import {
 
 import TextBox from '../components/TextBox.js';
 import Button from '../components/Button.js';
-import Haksa from '../modules/Haksa.js';
-
-haksa = new Haksa();
 
 export default class LoginPage extends React.Component {
   constructor(props) {
@@ -33,6 +30,10 @@ export default class LoginPage extends React.Component {
     console.log('LoginSuccess?', haksa.sauSession.isLoginState);
     if (haksa.sauSession.isLoginState) this.moveMain();
     else alert('로그인 실패');
+  }
+
+  getASEK() {
+    return this.asek;
   }
 
   moveMain() {

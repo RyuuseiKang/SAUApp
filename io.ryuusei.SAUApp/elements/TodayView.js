@@ -7,10 +7,14 @@ import {
   ListView,
   Dimensions,
   RefreshControl,
+  Image,
 } from 'react-native';
 
 import NowAttendWarning from './NowAttendWarning.js';
 import ScheduleElement from './ScheduleElement.js';
+
+const uri =
+  'https://s3.amazonaws.com/exp-icon-assets/ExpoEmptyManifest_192.png';
 
 export default class TodayView extends React.Component {
   constructor(props) {
@@ -41,7 +45,6 @@ export default class TodayView extends React.Component {
             refreshing={this.state.refreshing}
             onRefresh={this._onRefresh}
             title={'오늘을 갱신합니다.'}
-            progressViewOffset={-20}
           />
         }
       >
@@ -52,17 +55,13 @@ export default class TodayView extends React.Component {
           <ScheduleElement />
           <ScheduleElement />
           <ScheduleElement />
-          <ScheduleElement />
-          <ScheduleElement />
-          <ScheduleElement />
-          <ScheduleElement />
-          <ScheduleElement />
-          <ScheduleElement />
-          <ScheduleElement />
-          <ScheduleElement />
-          <ScheduleElement />
-          <ScheduleElement />
-          <ScheduleElement />
+          <Image style={{width: 96, height: 96}} source={{uri}} />
+          <Image style={{width: 96, height: 96}} source={{uri}} />
+          <Image style={{width: 96, height: 96}} source={{uri}} />
+          <Image style={{width: 96, height: 96}} source={{uri}} />
+          <Image style={{width: 96, height: 96}} source={{uri}} />
+          <Image style={{width: 96, height: 96}} source={{uri}} />
+          <Image style={{width: 96, height: 96}} source={{uri}} />
           <View>
             <Text />
           </View>
@@ -79,7 +78,7 @@ var deviceWidth = Dimensions.get('window').width;
 const styles = StyleSheet.create({
   scrollViewContainer: {
     width: deviceWidth,
-    backgroundColor: '#FCFCFC',
+    backgroundColor: '#FFFFFF',
   },
   shadow: {
     shadowOpacity: 0.1,

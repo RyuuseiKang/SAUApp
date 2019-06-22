@@ -1,26 +1,28 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 
-import {createAppContainer, createSwitchNavigator} from 'react-navigation';
+import {
+  createAppContainer,
+  createSwitchNavigator,
+  createBottomTabNavigator,
+} from 'react-navigation';
+
+import Haksa from './modules/Haksa.js';
 
 import LoginPage from './screens/LoginPage.js';
+
 import MainPage from './screens/MainPage.js';
+haksa = new Haksa();
 
-export default function App() {
-  const AppContainer = createAppContainer(AppSwitchNavigator);
-  return <AppContainer />;
+export default class App extends React.Component {
+  render() {
+    return <AppContainer />;
+  }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
 
 const AppSwitchNavigator = new createSwitchNavigator({
   Login: {screen: LoginPage},
   Main: {screen: MainPage},
 });
+
+const AppContainer = createAppContainer(AppSwitchNavigator);

@@ -11,9 +11,8 @@ import {
 
 import TextBox from '../components/TextBox.js';
 import Button from '../components/Button.js';
-import Haksa from '../modules/Haksa.js';
 
-haksa = new Haksa();
+haksa = super.haksa;
 
 export default class LoginScreen extends React.Component {
   login(userId, passwd) {

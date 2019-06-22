@@ -28,6 +28,8 @@ var deviceWidth = Dimensions.get('window').width;
 var TabCount = 2;
 let tabWidth = deviceWidth * 0.6;
 
+haksa = super.haksa;
+
 export default class MainScreen extends React.Component {
   constructor(props) {
     super(props);
