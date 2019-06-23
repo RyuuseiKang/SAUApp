@@ -6,9 +6,10 @@ import {SafeAreaView} from 'react-navigation';
 import {BlurView} from 'expo-blur';
 
 export default class TopBar extends React.Component {
+  state = {pageName: '오늘'};
   render() {
     return (
-      <BlurView blurType="light" blurAmount={50}>
+      <BlurView blurType="light" blurAmount={100}>
         <View
           style={{
             flexDirection: 'row',
@@ -17,7 +18,7 @@ export default class TopBar extends React.Component {
         >
           <View style={{justifyContent: 'center', alignContent: 'center'}}>
             <Text style={styles.todayDate}>{getToday()}</Text>
-            <Text style={styles.title}>오늘</Text>
+            <Text style={styles.title}>{this.state.pageName}</Text>
             <View />
           </View>
           <View

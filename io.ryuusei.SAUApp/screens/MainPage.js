@@ -46,10 +46,38 @@ export default class MainPage extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <View>
         <SafeAreaView forceInset={{bottom: 'never'}}>
           <TopBar />
           <ScrollView
+            horizontal
+            pagingEnabled={true}
+            bounces={false}
+            showsVerticalScrollIndicator={false}
+            scrollEventThrottle={32}
+          >
+            <DashboardPage />
+            <DashboardPage />
+            <DashboardPage />
+          </ScrollView>
+
+          <BottomNavigator />
+        </SafeAreaView>
+      </View>
+    );
+  }
+}
+
+var deviceHeight = Dimensions.get('window').height;
+var deviceWidth = Dimensions.get('window').width;
+
+const styles = StyleSheet.create({
+  container: {flex: 1, flexDirection: 'column'},
+  pages: {margin: 0},
+});
+
+/* 
+<ScrollView
             style={styles.pages}
             horizontal
             pagingEnabled={true}
@@ -66,20 +94,7 @@ export default class MainPage extends React.Component {
             ref={node => (this.TabScrollView = node)}
           >
             <DashboardPage />
-            <TablePage />
-            <SettingPage />
+            <Image style={{width: 96, height: 96}} source={{uri}} />
+            <Image style={{width: 96, height: 96}} source={{uri}} />
           </ScrollView>
-          <BottomNavigator />
-        </SafeAreaView>
-      </View>
-    );
-  }
-}
-
-var deviceHeight = Dimensions.get('window').height;
-var deviceWidth = Dimensions.get('window').width;
-
-const styles = StyleSheet.create({
-  container: {flex: 1, flexDirection: 'column'},
-  pages: {},
-});
+*/

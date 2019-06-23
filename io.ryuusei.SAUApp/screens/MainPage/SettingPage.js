@@ -1,12 +1,15 @@
 import React from 'react';
 
-import {View, Text, StyleSheet, Dimensions} from 'react-native';
+import {View, Text, StyleSheet, Dimensions, Image} from 'react-native';
+
+const uri =
+  'https://s3.amazonaws.com/exp-icon-assets/ExpoEmptyManifest_192.png';
 
 export default class SettingPage extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>asdfasdfasdf</Text>
+        <Image style={{width: 96, height: 96}} source={{uri}} />
       </View>
     );
   }
@@ -19,6 +22,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: deviceWidth,
-    height: deviceHeight,
+    height: '100%',
   },
 });

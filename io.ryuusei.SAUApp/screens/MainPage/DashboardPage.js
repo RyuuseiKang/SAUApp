@@ -33,26 +33,22 @@ export default class DashboardPage extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <SafeAreaView forceInset={{bottom: 'never'}}>
-          <View style={{height: '100%', width: '100%'}}>
-            <ScrollView
-              horizontal
-              pagingEnabled={true}
-              bounces={false}
-              showsVerticalScrollIndicator={false}
-              showsHorizontalScrollIndicator={false}
-              scrollEventThrottle={32}
-              onMomentumScrollEnd={e => {
-                this.state.isTabOpen = e.nativeEvent.contentOffset.x / tabWidth;
-              }}
-              ref={node => (this.TabScrollView = node)}
-            >
-              <View>
-                <TodayView />
-              </View>
-            </ScrollView>
+        <ScrollView
+          horizontal
+          pagingEnabled={true}
+          bounces={false}
+          showsVerticalScrollIndicator={false}
+          showsHorizontalScrollIndicator={false}
+          scrollEventThrottle={32}
+          onMomentumScrollEnd={e => {
+            //this.state.isTabOpen = e.nativeEvent.contentOffset.x / tabWidth;
+          }}
+          ref={node => (this.TabScrollView = node)}
+        >
+          <View>
+            <TodayView />
           </View>
-        </SafeAreaView>
+        </ScrollView>
       </View>
     );
   }
@@ -62,7 +58,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: deviceWidth,
-    height: deviceHeight,
+    height: '90%',
   },
   tabScrollIndicator: {
     height: 5,
