@@ -73,6 +73,9 @@ export default class LoginPage extends React.Component {
             secureTextEntry={true}
             ref={'password'}
           />
+          <View>
+            <Text style={styles.help}>어떤 과정을 거치나요?</Text>
+          </View>
           <Button
             style={styles.button}
             onPress={() => {
@@ -116,6 +119,13 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     backgroundColor: 'rgba(235, 235, 235, 0.3)',
     color: '#FFF',
+  },
+  help: {
+    margin: 10,
+    padding: 5,
+    fontSize: 20,
+    color: 'white',
+    textDecorationLine: 'underline',
   },
   button: {
     margin: 30,
