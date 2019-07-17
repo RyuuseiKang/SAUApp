@@ -56,9 +56,9 @@ export default class MainPage extends React.Component {
             showsVerticalScrollIndicator={false}
             scrollEventThrottle={32}
           >
-            <DashboardPage />
-            <DashboardPage />
-            <DashboardPage />
+            <DashboardPage style={styles.pages} />
+            <DashboardPage style={styles.pages} />
+            <DashboardPage style={styles.pages} />
           </ScrollView>
 
           <BottomNavigator />
@@ -73,7 +73,7 @@ var deviceWidth = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
   container: {flex: 1, flexDirection: 'column'},
-  pages: {margin: 0},
+  pages: {margin: 0, height: '100'},
 });
 
 /* 

@@ -105,8 +105,8 @@ const styles = StyleSheet.create({
   },
   title: {
     color: '#FFF',
-    margin: 50,
-    fontSize: 40,
+    margin: 40,
+    fontSize: 45,
     fontWeight: 'bold',
     textShadowColor: 'rgba(33, 33, 33, 0.5)',
     textShadowOffset: {width: -1, height: 1},

@@ -20,7 +20,7 @@ import {BlurView} from 'expo-blur';
 import TodayView from '../../elements/TodayView.js';
 import ScheduleView from '../../elements/ScheduleView.js';
 
-var deviceHeight = Dimensions.get('window').height;
+var deviceHeight = Dimensions.get('window').height - 33 - 105;
 var deviceWidth = Dimensions.get('window').width;
 var TabCount = 2;
 let tabWidth = deviceWidth * 0.6;
@@ -56,9 +56,9 @@ export default class DashboardPage extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     width: deviceWidth,
-    height: '90%',
+
+    paddingBottom: 30,
   },
   tabScrollIndicator: {
     height: 5,
