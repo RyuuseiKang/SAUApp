@@ -23,6 +23,9 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "android": {
+      "package": "io.ryuusei.SAUApp"
+    },
     "ios": {
       "supportsTablet": true
     }

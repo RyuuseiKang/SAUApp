@@ -1,9 +1,9 @@
 {
   "expo": {
-    "name": "SAUApp",
-    "slug": "io.ryuusei.sau",
+    "name": "SAU",
+    "slug": "sau",
     "privacy": "public",
-    "sdkVersion": "33.0.0",
+    "sdkVersion": "34.0.0",
     "platforms": [
       "ios",
       "android",
