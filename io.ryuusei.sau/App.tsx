@@ -10,9 +10,7 @@ import Haksa from './modules/Haksa.js';
 
 export default class App extends React.Component {
   render() {
-
-    this.state = {haksa: {Haksa}};
-
+    var haksa = new Haksa;
     return (
         <AppContainer />
     );
@@ -26,8 +24,10 @@ const styles = StyleSheet.create({
 });
 
 const AppSwitchNavigator = createSwitchNavigator({
-  Login: {screen: LoginPage},
-  Main: {screen: MainPage},
-});
+    Login: {screen: LoginPage},
+    Main: {screen: MainPage},
+  },
+  {initialRouteName: 'Main'}
+);
 
 const AppContainer = createAppContainer(AppSwitchNavigator);

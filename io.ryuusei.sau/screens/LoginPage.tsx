@@ -16,36 +16,28 @@ import {Input, Button, CheckBox} from 'react-native-elements';
 import {commons} from '../styles/commons';
 import {normalize} from '../modules/FontNormalize';
 
-export default class LoginPage extends React.Component {
-  constructor(props: any) {
-    super(props);
+import { NavigationInjectedProps, withNavigation } from 'react-navigation';
 
-    //this.moveMain = this.moveMain.bind(this);
-  }
-
+export default class LoginPage extends React.Component<NavigationInjectedProps> {
   state = { userId: '', password: '' }
 
   async login(userId: string, passwd: string) {
-    await super.state.haksa.Login(userId, passwd);
+    
+    this.props.navigation.navigate('Main');
+
+    await this.props.haksa.Login(userId, passwd);
     console.log('LoginSuccess?', super.state.haksa.sauSession.isLoginState);
-    if (super.state.haksa.sauSession.isLoginState) this.moveMain();
+
+    if (super.state.haksa.sauSession.isLoginState)
+      this.props.navigation.navigate('Main');
     else alert('로그인 실패');
   }
 
-  async isAlreadyLogin() {
-    await super.state.haksa.SessionLogin();
-
-    if (super.state.haksa.sauSession.isLoginState) this.moveMain();
-  }
-
-  MoveMain(){
+  moveMainPage() {
     this.props.navigation.navigate('Main');
   }
 
   render() {
-    // 이미 로그인 되어 있는지 확인
-    this.isAlreadyLogin();
-
     return (
       <KeyboardAvoidingView style={styles.container} behavior="padding">
         <View>

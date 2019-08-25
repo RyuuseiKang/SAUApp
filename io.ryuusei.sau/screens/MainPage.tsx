@@ -14,43 +14,60 @@ import {commons} from '../styles/commons';
 
 import {normalize} from '../modules/FontNormalize';
 
-export default function MainPage() {
+import { NavigationInjectedProps, withNavigation } from 'react-navigation';
+
+export default class MainPage extends React.Component<NavigationInjectedProps> {
   state = {pageName: '오늘'};
-  return (
-    <SafeAreaView style={styles.container}>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}
-      >
-        <View style={{padding: 15}}>
-          <Text allowFontScaling={false} style={styles.todayDate}>
-            {getToday()}
-          </Text>
-          <Text allowFontScaling={false} style={styles.title}>
-            {this.state.pageName}
-          </Text>
+
+  CheckLogin() {
+    if(true)
+      this.moveLoginPage();
+  }
+
+  moveLoginPage() {
+    this.props.navigation.navigate('Login');
+  }
+
+  render() {
+    // 서비스 사용 전 로그인 확인
+    this.CheckLogin();
+
+    return (
+      <SafeAreaView style={styles.container}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <View style={{padding: 15}}>
+            <Text allowFontScaling={false} style={styles.todayDate}>
+              {getToday()}
+            </Text>
+            <Text allowFontScaling={false} style={styles.title}>
+              {this.state.pageName}
+            </Text>
+          </View>
+          <View style={{padding: 15}}>
+            <TouchableWithoutFeedback
+              onPress={() => {
+                alert('Show UserProfile Page');
+              }}
+            >
+              <Image
+                style={commons.icon}
+                source={require('../assets/people_front.jpg')}
+              />
+            </TouchableWithoutFeedback>
+          </View>
         </View>
-        <View style={{padding: 15}}>
-          <TouchableWithoutFeedback
-            onPress={() => {
-              alert('Show UserProfile Page');
-            }}
-          >
-            <Image
-              style={commons.icon}
-              source={require('../assets/people_front.jpg')}
-            />
-          </TouchableWithoutFeedback>
+        <View>
+          <Text>여기부터 메인</Text>
         </View>
-      </View>
-      <View>
-        <Text>여기부터 메인</Text>
-      </View>
-    </SafeAreaView>
-  );
+      </SafeAreaView>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
