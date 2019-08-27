@@ -7,31 +7,33 @@ import {
   Image,
   TouchableWithoutFeedback,
   Platform,
-  StatusBar
+  StatusBar,
+  Dimensions,
+  ScrollView,
+  Animated,
 } from 'react-native';
 
+import {normalize} from '../modules/FontNormalize';
 import {commons} from '../styles/commons';
 
-import {normalize} from '../modules/FontNormalize';
+import {
+  NavigationInjectedProps,
+  withNavigation,
+  NavigationScreenProps,
+  createBottomTabNavigator,
+} from 'react-navigation';
 
-import { NavigationInjectedProps, withNavigation } from 'react-navigation';
-
-export default class MainPage extends React.Component<NavigationInjectedProps> {
-  state = {pageName: '오늘'};
-
-  CheckLogin() {
-    if(true)
-      this.moveLoginPage();
+export default class MainPage extends React.Component {
+  constructor(props: any) {
+    super(props);
   }
 
-  moveLoginPage() {
-    this.props.navigation.navigate('Login');
-  }
+  state = {pageName: '오늘', loaded: false};
+
+  // Initialize
+  componentWillMount() {}
 
   render() {
-    // 서비스 사용 전 로그인 확인
-    this.CheckLogin();
-
     return (
       <SafeAreaView style={styles.container}>
         <View
@@ -41,7 +43,7 @@ export default class MainPage extends React.Component<NavigationInjectedProps> {
             alignItems: 'center',
           }}
         >
-          <View style={{padding: 15}}>
+          <View style={{paddingLeft: 20, paddingTop: 15, paddingBottom: 15}}>
             <Text allowFontScaling={false} style={styles.todayDate}>
               {getToday()}
             </Text>
@@ -49,32 +51,61 @@ export default class MainPage extends React.Component<NavigationInjectedProps> {
               {this.state.pageName}
             </Text>
           </View>
-          <View style={{padding: 15}}>
+          <View style={{paddingRight: 20, paddingTop: 15, paddingBottom: 15}}>
             <TouchableWithoutFeedback
               onPress={() => {
                 alert('Show UserProfile Page');
+                this.props.screenProps.haksa.Logout();
+                this.props.navigation.navigate('Login');
               }}
             >
-              <Image
-                style={commons.icon}
-                source={require('../assets/people_front.jpg')}
-              />
+              <View style={styles.icon}>
+                <Image
+                  style={commons.icon}
+                  source={{
+                    uri: this.props.screenProps.haksa.GetProfileImageURI(),
+                  }}
+                />
+              </View>
             </TouchableWithoutFeedback>
           </View>
         </View>
-        <View>
-          <Text>여기부터 메인</Text>
-        </View>
+        <ScrollView
+          horizontal
+          pagingEnabled={true}
+          bounces={false}
+          showsVerticalScrollIndicator={false}
+          scrollEventThrottle={32}
+        >
+          <View style={styles.pages}>
+            <Text>대시보드</Text>
+          </View>
+          <View style={styles.pages}>
+            <Text>학사 시간표</Text>
+          </View>
+          <View style={styles.pages}>
+            <Text>학과 게시판</Text>
+          </View>
+          <View style={styles.pages}>
+            <Text>기타</Text>
+          </View>
+          <View style={styles.pages}>
+            <Text>설정</Text>
+          </View>
+        </ScrollView>
       </SafeAreaView>
     );
   }
 }
 
+var deviceWidth = Dimensions.get('window').width;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
+
   todayDate: {
     fontSize: normalize(13),
     fontWeight: 'bold',
@@ -86,6 +117,18 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: 2.5,
   },
+  icon: {
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+
+    elevation: 10,
+  },
+  pages: {width: deviceWidth},
 });
 
 function getToday() {
