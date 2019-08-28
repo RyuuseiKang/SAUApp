@@ -21,17 +21,27 @@ import {
   withNavigation,
   NavigationScreenProps,
   createBottomTabNavigator,
+  createAppContainer,
 } from 'react-navigation';
+
+import DashboardPage from './MainPage/DashboardPage';
+import TableboardPage from './MainPage/TableboardPage';
+import SettingPage from './MainPage/SettingPage';
 
 export default class MainPage extends React.Component {
   constructor(props: any) {
     super(props);
+
+    // bootstrapping here
   }
 
   state = {pageName: '오늘', loaded: false};
 
   // Initialize
   componentWillMount() {}
+
+  // Mounted
+  componentDidMount() {}
 
   render() {
     return (
@@ -70,29 +80,7 @@ export default class MainPage extends React.Component {
             </TouchableWithoutFeedback>
           </View>
         </View>
-        <ScrollView
-          horizontal
-          pagingEnabled={true}
-          bounces={false}
-          showsVerticalScrollIndicator={false}
-          scrollEventThrottle={32}
-        >
-          <View style={styles.pages}>
-            <Text>대시보드</Text>
-          </View>
-          <View style={styles.pages}>
-            <Text>학사 시간표</Text>
-          </View>
-          <View style={styles.pages}>
-            <Text>학과 게시판</Text>
-          </View>
-          <View style={styles.pages}>
-            <Text>기타</Text>
-          </View>
-          <View style={styles.pages}>
-            <Text>설정</Text>
-          </View>
-        </ScrollView>
+        <MainContainer />
       </SafeAreaView>
     );
   }
@@ -144,3 +132,11 @@ function getToday() {
     '요일'
   );
 }
+
+const TabNavigator = createBottomTabNavigator({
+  Dashboard: DashboardPage,
+  Table: TableboardPage,
+  Setting: SettingPage,
+});
+
+const MainContainer = createAppContainer(TabNavigator);
