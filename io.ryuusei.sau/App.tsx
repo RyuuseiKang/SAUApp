@@ -9,7 +9,7 @@ import {
 
 import MainPage from './screens/MainPage';
 import LoginPage from './screens/LoginPage';
-import AuthPage from './screens/AuthPage';
+import AuthPage from './screens/AuthPage';
 
 import Haksa from './modules/Haksa.js';
 
