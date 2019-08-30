@@ -16,6 +16,7 @@ import {Input, Button, CheckBox} from 'react-native-elements';
 import {commons} from '../styles/commons';
 import {normalize} from '../modules/FontNormalize';
 
+<<<<<<< HEAD
 import { NavigationInjectedProps, withNavigation } from 'react-navigation';
 
 export default class LoginPage extends React.Component<NavigationInjectedProps> {
@@ -36,6 +37,44 @@ export default class LoginPage extends React.Component<NavigationInjectedProps> 
   moveMainPage() {
     this.props.navigation.navigate('Main');
   }
+=======
+import {
+  NavigationInjectedProps,
+  withNavigation,
+  NavigationScreenProps,
+} from 'react-navigation';
+
+export default class LoginPage extends React.Component<
+  NavigationInjectedProps,
+  NavigationScreenProps
+> {
+  constructor(
+    props: Readonly<
+      NavigationInjectedProps<import('react-navigation').NavigationParams>
+    >
+  ) {
+    super(props);
+  }
+
+  state = {userId: '', password: ''};
+
+  async login(userId: string, passwd: string) {
+    const isLoginStatus = await this.props.screenProps.haksa.Login(
+      userId,
+      passwd
+    );
+
+    console.log(
+      'LoginSuccess?',
+      this.props.screenProps.haksa.sauSession.isLoginState
+    );
+
+    this.props.navigation.navigate(isLoginStatus ? 'Auth' : 'Login');
+  }
+
+  // Initialize
+  componentWillMount() {}
+>>>>>>> ca3b324b0125e0432ae42b3e788ad786fdc2e503
 
   render() {
     return (
@@ -46,17 +85,18 @@ export default class LoginPage extends React.Component<NavigationInjectedProps> 
           </Text>
         </View>
         <View style={styles.loginSection}>
-          <Input containerStyle={styles.input}
-          placeholder="아이디"
-          onChangeText={(value) => this.setState({userId: value})}
-          value={this.state.userId}
+          <Input
+            containerStyle={styles.input}
+            placeholder="아이디"
+            onChangeText={value => this.setState({userId: value})}
+            value={this.state.userId}
           />
           <Input
             containerStyle={styles.input}
             placeholder="비밀번호"
             secureTextEntry={true}
             autoCapitalize={'none'}
-            onChangeText={(value) => this.setState({password: value})}
+            onChangeText={value => this.setState({password: value})}
             value={this.state.password}
           />
           <Text
@@ -67,19 +107,18 @@ export default class LoginPage extends React.Component<NavigationInjectedProps> 
           >
             로그인 할 수 없나요?
           </Text>
-          <Button
-            containerStyle={styles.buttonContainer}
-            buttonStyle={styles.button}
-            onPress={() => {
-              this.login(
-                this.state.userId,
-                this.state.password
-              );
-              console.log('로그인 시도');
-            }}
-            title="로그인"
-            type="solid"
-          />
+          <View style={styles.buttonView}>
+            <Button
+              containerStyle={styles.buttonContainer}
+              buttonStyle={styles.button}
+              onPress={() => {
+                this.login(this.state.userId, this.state.password);
+                console.log('로그인 시도');
+              }}
+              title="로그인"
+              type="solid"
+            />
+          </View>
         </View>
       </KeyboardAvoidingView>
     );
@@ -112,6 +151,17 @@ const styles = StyleSheet.create({
   },
   button: {
     padding: 15,
+  },
+  buttonView: {
+    shadowColor: '#6666FF',
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+
+    elevation: 10,
   },
   loginSection: {
     alignItems: 'center',
