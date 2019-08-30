@@ -16,6 +16,8 @@ import {
 import {normalize} from '../modules/FontNormalize';
 import {commons} from '../styles/commons';
 
+import TabBar from '../components/TabBar';
+
 import {
   NavigationInjectedProps,
   withNavigation,
@@ -101,7 +103,7 @@ const styles = StyleSheet.create({
     paddingBottom: 2.5,
   },
   title: {
-    fontSize: normalize(20),
+    fontSize: normalize(22),
     fontWeight: 'bold',
     marginTop: 2.5,
   },
@@ -133,10 +135,13 @@ function getToday() {
   );
 }
 
-const TabNavigator = createBottomTabNavigator({
-  Dashboard: DashboardPage,
-  Table: TableboardPage,
-  Setting: SettingPage,
-});
+const TabNavigator = createBottomTabNavigator(
+  {
+    Dashboard: DashboardPage,
+    Table: TableboardPage,
+    Setting: SettingPage,
+  },
+  {tabBarComponent: TabBar}
+);
 
 const MainContainer = createAppContainer(TabNavigator);
