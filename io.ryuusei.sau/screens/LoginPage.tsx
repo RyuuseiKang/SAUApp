@@ -9,6 +9,8 @@ import {
   Dimensions,
   KeyboardAvoidingView,
   Linking,
+  Animated,
+  Easing,
 } from 'react-native';
 
 import {Input, Button, CheckBox} from 'react-native-elements';
@@ -44,19 +46,43 @@ import {
   NavigationScreenProps,
 } from 'react-navigation';
 
-export default class LoginPage extends React.Component<
-  NavigationInjectedProps,
-  NavigationScreenProps
-> {
-  constructor(
-    props: Readonly<
-      NavigationInjectedProps<import('react-navigation').NavigationParams>
-    >
-  ) {
+export default class LoginPage extends React.Component {
+  constructor(props: any) {
     super(props);
+
+    // 여기서부터 애니메이션 적용
+    this.state = {
+      userId: '',
+      password: '',
+      animationValue: new Animated.Value(0),
+      position: new Animated.Value(300),
+    };
   }
 
-  state = {userId: '', password: ''};
+  _fadeIn() {
+    Animated.timing(this.state.animationValue, {
+      toValue: 1,
+      duration: 500,
+      easing: Easing.quad,
+      delay: 0,
+    }).start();
+
+    Animated.timing(this.state.position, {
+      toValue: 0,
+      duration: 300,
+      easing: Easing.quad,
+      delay: 0,
+    }).start();
+  }
+
+  _fadeOut() {}
+
+  _getStyle(objectName: string) {
+    return {
+      opacity: this.state.animationValue,
+      marginTop: this.state.position,
+    };
+  }
 
   async login(userId: string, passwd: string) {
     const isLoginStatus = await this.props.screenProps.haksa.Login(
@@ -76,14 +102,18 @@ export default class LoginPage extends React.Component<
   componentWillMount() {}
 >>>>>>> ca3b324b0125e0432ae42b3e788ad786fdc2e503
 
+  componentDidMount() {
+    this._fadeIn();
+  }
+
   render() {
     return (
       <KeyboardAvoidingView style={styles.container} behavior="padding">
-        <View>
+        <Animated.View style={this._getStyle(null)}>
           <Text allowFontScaling={false} style={styles.title}>
             Login Page
           </Text>
-        </View>
+        </Animated.View>
         <View style={styles.loginSection}>
           <Input
             containerStyle={styles.input}
