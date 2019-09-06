@@ -122,7 +122,7 @@ export default class LoginPage extends React.Component {
                 this.login(this.state.userId, this.state.password);
                 console.log('로그인 시도');
               }}
-              title="로그인"
+              title="Login"
               type="solid"
             />
           </View>
