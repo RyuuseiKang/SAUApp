@@ -11,7 +11,7 @@ export default class AuthPage extends React.Component {
   bootStrapAsync = async () => {
     const isSessionAlive = await this.props.screenProps.haksa.SessionLogin();
 
-    this.props.navigation.navigate(isSessionAlive ? 'Main' : 'Login');
+    this.props.navigation.navigate(isSessionAlive ? 'Main' : 'Main');
   };
 
   render() {
