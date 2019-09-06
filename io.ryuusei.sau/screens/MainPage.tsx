@@ -37,7 +37,7 @@ export default class MainPage extends React.Component {
     // bootstrapping here
   }
 
-  state = {pageName: '브랜치', loaded: false};
+  state = {pageName: '오늘', loaded: false};
 
   // Initialize
   componentWillMount() {}
