@@ -1,12 +1,13 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
+import SubjectItem from '../../components/SubjectItem';
 
 export default class DashboardPage extends React.Component {
   render() {
     return (
       <View>
         <View>
-          <Text>DashboardPage</Text>
+          <SubjectItem></SubjectItem>
         </View>
       </View>
     );
