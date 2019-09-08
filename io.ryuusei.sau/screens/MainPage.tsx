@@ -26,6 +26,26 @@ import {
   createAppContainer,
 } from 'react-navigation';
 
+<<<<<<< HEAD
+import { NavigationInjectedProps, withNavigation } from 'react-navigation';
+
+export default class MainPage extends React.Component<NavigationInjectedProps> {
+  state = {pageName: '오늘'};
+
+  CheckLogin() {
+    if(true)
+      this.moveLoginPage();
+  }
+
+  moveLoginPage() {
+    this.props.navigation.navigate('Login');
+  }
+
+  render() {
+    // 서비스 사용 전 로그인 확인
+    this.CheckLogin();
+
+=======
 import DashboardPage from './MainPage/DashboardPage';
 import TableboardPage from './MainPage/TableboardPage';
 import SettingPage from './MainPage/SettingPage';
@@ -46,6 +66,7 @@ export default class MainPage extends React.Component {
   componentDidMount() {}
 
   render() {
+>>>>>>> ca3b324b0125e0432ae42b3e788ad786fdc2e503
     return (
       <SafeAreaView style={styles.container}>
         <View
@@ -55,7 +76,11 @@ export default class MainPage extends React.Component {
             alignItems: 'center',
           }}
         >
+<<<<<<< HEAD
+          <View style={{padding: 15}}>
+=======
           <View style={{paddingLeft: 20, paddingTop: 15, paddingBottom: 15}}>
+>>>>>>> ca3b324b0125e0432ae42b3e788ad786fdc2e503
             <Text allowFontScaling={false} style={styles.todayDate}>
               {getToday()}
             </Text>
@@ -63,6 +88,24 @@ export default class MainPage extends React.Component {
               {this.state.pageName}
             </Text>
           </View>
+<<<<<<< HEAD
+          <View style={{padding: 15}}>
+            <TouchableWithoutFeedback
+              onPress={() => {
+                alert('Show UserProfile Page');
+              }}
+            >
+              <Image
+                style={commons.icon}
+                source={require('../assets/people_front.jpg')}
+              />
+            </TouchableWithoutFeedback>
+          </View>
+        </View>
+        <View>
+          <Text>여기부터 메인</Text>
+        </View>
+=======
           <View style={{paddingRight: 20, paddingTop: 15, paddingBottom: 15}}>
             <TouchableWithoutFeedback
               onPress={() => {
@@ -83,6 +126,7 @@ export default class MainPage extends React.Component {
           </View>
         </View>
         <MainContainer />
+>>>>>>> ca3b324b0125e0432ae42b3e788ad786fdc2e503
       </SafeAreaView>
     );
   }
