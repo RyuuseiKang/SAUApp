@@ -18,28 +18,6 @@ import {Input, Button, CheckBox} from 'react-native-elements';
 import {commons} from '../styles/commons';
 import {normalize} from '../modules/FontNormalize';
 
-<<<<<<< HEAD
-import { NavigationInjectedProps, withNavigation } from 'react-navigation';
-
-export default class LoginPage extends React.Component<NavigationInjectedProps> {
-  state = { userId: '', password: '' }
-
-  async login(userId: string, passwd: string) {
-    
-    this.props.navigation.navigate('Main');
-
-    await this.props.haksa.Login(userId, passwd);
-    console.log('LoginSuccess?', super.state.haksa.sauSession.isLoginState);
-
-    if (super.state.haksa.sauSession.isLoginState)
-      this.props.navigation.navigate('Main');
-    else alert('로그인 실패');
-  }
-
-  moveMainPage() {
-    this.props.navigation.navigate('Main');
-  }
-=======
 import {
   NavigationInjectedProps,
   withNavigation,
@@ -100,7 +78,6 @@ export default class LoginPage extends React.Component {
 
   // Initialize
   componentWillMount() {}
->>>>>>> ca3b324b0125e0432ae42b3e788ad786fdc2e503
 
   componentDidMount() {
     this._fadeIn();

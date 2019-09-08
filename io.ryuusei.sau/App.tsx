@@ -14,13 +14,6 @@ import AuthPage from './screens/AuthPage';
 import Haksa from './modules/Haksa.js';
 
 export default class App extends React.Component {
-<<<<<<< HEAD
-  render() {
-    var haksa = new Haksa;
-    return (
-        <AppContainer />
-    );
-=======
   haksa = new Haksa();
 
   state = {loaded: false};
@@ -34,7 +27,6 @@ export default class App extends React.Component {
 
   render() {
     return <AppContainer screenProps={{haksa: this.haksa}} />;
->>>>>>> ca3b324b0125e0432ae42b3e788ad786fdc2e503
   }
 }
 
@@ -44,13 +36,6 @@ const styles = StyleSheet.create({
   },
 });
 
-<<<<<<< HEAD
-const AppSwitchNavigator = createSwitchNavigator({
-    Login: {screen: LoginPage},
-    Main: {screen: MainPage},
-  },
-  {initialRouteName: 'Main'}
-=======
 const MainStack = createSwitchNavigator({
   screen: MainPage,
 });
@@ -63,7 +48,6 @@ const AppSwitchNavigator = createSwitchNavigator(
     Main: MainStack,
   },
   {initialRouteName: 'Auth'}
->>>>>>> ca3b324b0125e0432ae42b3e788ad786fdc2e503
 );
 
 const AppContainer = createAppContainer(AppSwitchNavigator);
