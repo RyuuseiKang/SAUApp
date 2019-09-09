@@ -2,33 +2,33 @@ import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 
 export default class AuthPage extends React.Component {
-  constructor(props: any) {
-    super(props);
+	constructor(props: any) {
+		super(props);
 
-    this.bootStrapAsync();
-  }
+		this.bootStrapAsync();
+	}
 
-  bootStrapAsync = async () => {
-    const isSessionAlive = await this.props.screenProps.haksa.SessionLogin();
+	bootStrapAsync = async () => {
+		const isSessionAlive = await this.props.screenProps.haksa.SessionLogin();
 
-    this.props.navigation.navigate(isSessionAlive ? 'Main' : 'Login');
-  };
+		this.props.navigation.navigate(isSessionAlive ? 'Main' : 'Login');
+	};
 
-  render() {
-    return (
-      <View style={styles.container}>
-        <View>
-          <Text>Loading...</Text>
-        </View>
-      </View>
-    );
-  }
+	render() {
+		return (
+			<View style={styles.container}>
+				<View>
+					<Text>Loading...</Text>
+				</View>
+			</View>
+		);
+	}
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignContent: 'center',
-    justifyContent: 'center',
-  },
+	container: {
+		flex: 1,
+		alignContent: 'center',
+		justifyContent: 'center',
+	},
 });
