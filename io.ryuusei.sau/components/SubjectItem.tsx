@@ -31,7 +31,7 @@ export default class SubjectItem extends React.Component {
 							<View style={{marginTop: normalize(14), position: 'absolute'}}>
 								<Dash
 									style={styles.dottedLine}
-									dashGap={normalize(7.5)}
+									dashGap={normalize(3)}
 									dashColor={'#FF6663'}
 									dashThickness={normalize(3)}
 									dashLength={normalize(3)}
@@ -39,7 +39,7 @@ export default class SubjectItem extends React.Component {
 								></Dash>
 								<Dash
 									style={styles.dottedLine}
-									dashGap={normalize(7.5)}
+									dashGap={normalize(3)}
 									dashColor={'#FF6663'}
 									dashThickness={normalize(3)}
 									dashLength={normalize(3)}
