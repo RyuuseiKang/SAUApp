@@ -13,7 +13,7 @@ import AuthPage from './screens/AuthPage';
 
 import Haksa from './modules/Haksa.js';
 
-import redux from 'react-redux';
+import {Provider} from 'react-redux';
 
 export default class App extends React.Component {
 	haksa = new Haksa();
