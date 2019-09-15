@@ -1,75 +1,158 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Dimensions} from 'react-native';
 
 import {normalize} from '../modules/FontNormalize';
 
+import * as Font from 'expo-font';
+
 import Dash from 'react-native-dash';
 
-export default class SubjectItem extends React.Component {
+interface IProps {
+	isEnd: boolean;
+	isLesson: boolean;
+	lessonName: string;
+	professorName: string;
+	location: string;
+	time: string;
+}
+
+export default class SubjectItem extends React.Component<IProps> {
+	constructor(props: IProps) {
+		super(props);
+
+		this.state = {isReady: false};
+	}
+
+	async componentDidMount() {
+		await Font.loadAsync({
+			'LexendDeca-Regular': require('../assets/fonts/LexendDeca-Regular.ttf'),
+		});
+		this.setState({isReady: true});
+	}
+
 	render() {
-		return (
-			<View>
-				<View style={{flexDirection: 'row'}}>
-					<View
-						style={{
-							height: normalize(20),
-							justifyContent: 'center',
-							margin: 5,
-						}}
-					>
-						<Text style={styles.time}>9:00</Text>
+		let lessonLine = null;
+		let professorNameView = null;
+		let locationView = null;
+		let splitIndicator = null;
+
+		if (!this.props.isEnd) {
+			if (this.props.isLesson) {
+				lessonLine = (
+					<View>
+						<View style={styles.solidLine}></View>
 					</View>
-					<View style={{}}>
+				);
+			} else {
+				lessonLine = (
+					<Dash
+						style={styles.dottedLine}
+						dashGap={normalize(2.2)}
+						dashColor={'#FF6663'}
+						dashThickness={normalize(2.5)}
+						dashLength={normalize(2.5)}
+						dashStyle={{borderRadius: normalize(2)}}
+					></Dash>
+				);
+			}
+
+			splitIndicator = (
+				<View
+					style={{
+						backgroundColor: '#888888',
+						opacity: 0.15,
+						height: normalize(1),
+						marginTop: 10,
+						marginLeft: 5,
+						width: deviceWidth,
+					}}
+				></View>
+			);
+		}
+
+		if (this.props.isLesson) {
+			professorNameView = (
+				<View style={styles.professorNameBack}>
+					<Text allowFontScaling={false} style={styles.professorName}>
+						{this.props.professorName}
+					</Text>
+				</View>
+			);
+			locationView = (
+				<Text allowFontScaling={false} style={styles.lessonLocation}>
+					{this.props.location}
+				</Text>
+			);
+		} else {
+			professorNameView = null;
+			locationView = null;
+		}
+
+		if (this.state.isReady)
+			return (
+				<View>
+					<View style={{flexDirection: 'row'}}>
 						<View
 							style={{
-								width: normalize(10),
-								alignItems: 'center',
+								height: normalize(20),
+								justifyContent: 'center',
+								margin: 5,
 							}}
 						>
-							<View style={styles.typeCircle}></View>
-							<View style={styles.solidLine}></View>
-							<View style={{marginTop: normalize(14), position: 'absolute'}}>
-								<Dash
-									style={styles.dottedLine}
-									dashGap={normalize(3)}
-									dashColor={'#FF6663'}
-									dashThickness={normalize(3)}
-									dashLength={normalize(3)}
-									dashStyle={{borderRadius: normalize(2)}}
-								></Dash>
-								<Dash
-									style={styles.dottedLine}
-									dashGap={normalize(3)}
-									dashColor={'#FF6663'}
-									dashThickness={normalize(3)}
-									dashLength={normalize(3)}
-									dashStyle={{borderRadius: normalize(2)}}
-								></Dash>
+							<Text allowFontScaling={false} style={styles.time}>
+								{this.props.time}
+							</Text>
+						</View>
+						<View style={{}}>
+							<View
+								style={{
+									width: normalize(10),
+									alignItems: 'center',
+								}}
+							>
+								<View
+									style={{
+										marginTop: 10,
+										position: 'absolute',
+									}}
+								>
+									{lessonLine}
+								</View>
+								<View style={styles.typeCircle}></View>
 							</View>
 						</View>
-					</View>
-					<View style={{margin: 5}}>
-						<View style={{flexDirection: 'row'}}>
-							<Text style={styles.lessonName}>네트워크 시스템</Text>
-							<View style={styles.professorNameBack}>
-								<Text style={styles.professorName}>김덕은</Text>
+						<View style={{margin: 5}}>
+							<View
+								style={{
+									flexDirection: 'row',
+									alignItems: 'center',
+									height: normalize(13) + 5,
+								}}
+							>
+								<Text allowFontScaling={false} style={styles.lessonName}>
+									{this.props.lessonName}
+								</Text>
+								{professorNameView}
 							</View>
+							{locationView}
+							{splitIndicator}
 						</View>
-						<Text style={styles.lessonLocation}>본관 502</Text>
 					</View>
 				</View>
-			</View>
-		);
+			);
+		else return <View></View>;
 	}
 }
 
+var deviceWidth = Dimensions.get('window').width;
+
 const styles = StyleSheet.create({
-	container: {},
 	time: {
 		color: '#8D8D8D',
-		fontWeight: '500',
-		fontSize: normalize(15),
+		fontSize: normalize(12),
 		textAlign: 'right',
+		width: normalize(35),
+		fontFamily: 'LexendDeca-Regular',
 	},
 	typeCircle: {
 		borderColor: '#FF6663',
@@ -77,43 +160,48 @@ const styles = StyleSheet.create({
 		backgroundColor: '#FFFFFF',
 		height: normalize(10),
 		width: normalize(10),
-		borderRadius: normalize(6.35),
-		marginTop: normalize(10),
+		borderRadius: normalize(5),
+		marginTop: normalize(8.7),
 		position: 'absolute',
 	},
 	solidLine: {
 		backgroundColor: '#FF6663',
-		height: normalize(15),
+		height: normalize(60),
 		width: normalize(2),
 	},
 	dottedLine: {
 		width: normalize(1),
-		height: normalize(20),
+		height: normalize(30),
 		flexDirection: 'column',
 		alignItems: 'center',
+		marginTop: normalize(6),
 	},
 	lessonName: {
 		marginLeft: 5,
 		marginRight: 5,
-		fontWeight: 'bold',
-		fontSize: normalize(20),
+		fontWeight: '600',
+		fontSize: normalize(15),
 	},
 	professorName: {
 		color: '#FFFFFF',
-		fontSize: normalize(16),
+		fontSize: normalize(13),
 		fontWeight: '500',
 		paddingLeft: 5,
 		paddingRight: 5,
+		padding: 2.5,
 	},
 	professorNameBack: {
 		backgroundColor: '#FF6663',
 		borderRadius: normalize(3),
 		justifyContent: 'center',
+		alignItems: 'center',
 	},
 	lessonLocation: {
 		color: '#8D8D8D',
-		margin: 5,
-		fontSize: normalize(18),
+		marginTop: 5,
+		marginLeft: 5,
+		marginRight: 5,
+		fontSize: normalize(14),
 		fontWeight: '500',
 	},
 });
