@@ -8,12 +8,13 @@ import {
 } from 'react-navigation';
 
 import MainPage from './screens/MainPage';
-import LoginPage from './screens/LoginPage';
-import AuthPage from './screens/AuthPage';
+import LoginPage from './screens/Login/presenter';
+import AuthPage from './screens/Auth/presenter';
 
 import Haksa from './modules/Haksa.js';
 
 import {Provider} from 'react-redux';
+import {store} from './reducer';
 
 export default class App extends React.Component {
 	haksa = new Haksa();
@@ -28,7 +29,11 @@ export default class App extends React.Component {
 	componentWillMount() {}
 
 	render() {
-		return <AppContainer screenProps={{haksa: this.haksa}} />;
+		return (
+			<Provider store={store}>
+				<AppContainer screenProps={{haksa: this.haksa}} />
+			</Provider>
+		);
 	}
 }
 

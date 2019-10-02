@@ -1,0 +1,1 @@
+export const serverUri = 'http://ec2-15-164-163-252.ap-northeast-2.compute.amazonaws.com:3000';

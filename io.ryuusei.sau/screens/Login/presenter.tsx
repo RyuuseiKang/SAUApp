@@ -15,8 +15,13 @@ import {
 
 import {Input, Button, CheckBox} from 'react-native-elements';
 
-import {commons} from '../styles/commons';
-import {normalize} from '../modules/FontNormalize';
+import {commons} from '../../styles/commons';
+import {normalize} from '../../modules/FontNormalize';
+
+import { connect } from 'react-redux'
+import {store} from '../../reducer';
+
+import {login, loginAsync} from '../../reducers/Auth';
 
 import {
   NavigationInjectedProps,
@@ -24,36 +29,38 @@ import {
   NavigationScreenProps,
 } from 'react-navigation';
 
-export default class LoginPage extends React.Component {
+export class LoginPage extends React.Component {
   constructor(props: any) {
     super(props);
+
+    // store.subscribe(this.render);
 
     // 여기서부터 애니메이션 적용
     this.state = {
       userId: '',
       password: '',
-      animationValue: new Animated.Value(0),
-      position: new Animated.Value(300),
+    //   animationValue: new Animated.Value(0),
+    //   position: new Animated.Value(300),
     };
   }
 
   _fadeIn() {
-    Animated.timing(this.state.animationValue, {
-      toValue: 1,
-      duration: 500,
-      easing: Easing.quad,
-      delay: 0,
-    }).start();
+  //   Animated.timing(this.state.animationValue, {
+  //     toValue: 1,
+  //     duration: 500,
+  //     easing: Easing.quad,
+  //     delay: 0,
+  //   }).start();
 
-    Animated.timing(this.state.position, {
-      toValue: 0,
-      duration: 300,
-      easing: Easing.quad,
-      delay: 0,
-    }).start();
+  //   Animated.timing(this.state.position, {
+  //     toValue: 0,
+  //     duration: 300,
+  //     easing: Easing.quad,
+  //     delay: 0,
+  //   }).start();
   }
 
-  _fadeOut() {}
+  // _fadeOut() {}
 
   _getStyle(objectName: string) {
     return {
@@ -62,28 +69,35 @@ export default class LoginPage extends React.Component {
     };
   }
 
-  async login(userId: string, passwd: string) {
-    const isLoginStatus = await this.props.screenProps.haksa.Login(
-      userId,
-      passwd
-    );
+  //async login(userId: string, userPassword: string) {
+    // const isLoginStatus = await this.props.screenProps.haksa.Login(
+    //   userId,
+    //   passwd
+    // );
 
-    console.log(
-      'LoginSuccess?',
-      this.props.screenProps.haksa.sauSession.isLoginState
-    );
+    // this.props.login(userId, userPassword);
 
-    this.props.navigation.navigate(isLoginStatus ? 'Auth' : 'Login');
-  }
+    // console.log(
+    //   'LoginSuccess?',
+    //   this.props.screenProps.haksa.sauSession.isLoginState
+    // );
+
+    // this.props.navigation.navigate(isLoginStatus ? 'Auth' : 'Login');
+  //}
 
   // Initialize
   componentWillMount() {}
 
   componentDidMount() {
-    this._fadeIn();
+    // this._fadeIn();
   }
 
   render() {
+    if(store.getState().Auth.loggingIn) {
+      // 로그인이 되어있으므로 이동
+      this.props.navigation.navigate('Main');
+    }
+    
     return (
       <KeyboardAvoidingView style={styles.container} behavior="padding">
         <Animated.View style={this._getStyle(null)}>
@@ -118,9 +132,10 @@ export default class LoginPage extends React.Component {
             <Button
               containerStyle={styles.buttonContainer}
               buttonStyle={styles.button}
-              onPress={() => {
-                this.login(this.state.userId, this.state.password);
-                console.log('로그인 시도');
+              onPress={async () => {
+                this.props.login(this.state.userId, this.state.password);
+                // console.log('로그인 시도');
+                // await console.log(this.props.Auth);
               }}
               title="로그인"
               type="solid"
@@ -181,3 +196,16 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
   },
 });
+
+const mapStateToProps = state => ({
+  state: state,
+
+})
+
+const mapDispatchToProps = dispatch => {
+  return{
+    login: (_userId: string, _userPassword: string) => dispatch(loginAsync(_userId, _userPassword)),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);

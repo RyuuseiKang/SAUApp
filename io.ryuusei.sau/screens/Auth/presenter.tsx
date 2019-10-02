@@ -1,6 +1,8 @@
 import React from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 
+import { connect } from 'react-redux'
+
 export default class AuthPage extends React.Component {
 	constructor(props: any) {
 		super(props);
