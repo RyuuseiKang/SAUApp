@@ -30,22 +30,40 @@ import DashboardPage from './MainPage/DashboardPage';
 import TableboardPage from './MainPage/TableboardPage';
 import SettingPage from './MainPage/SettingPage';
 
-export default class MainPage extends React.Component<any, any> {
+import { connect } from 'react-redux'
+import {store} from '../reducer';
+
+import {getUserDataAsync, getTimeTableAsync} from '../reducers/User';
+
+export class MainPage extends React.Component<any, any> {
 	constructor(props: any) {
 		super(props);
 
 		// bootstrapping here
 	}
 
-	state = {pageName: '이번주', loaded: false};
+	state = {pageName: '이번주', loaded: false, profileURI: ''};
 
 	// Initialize
-	componentWillMount() {}
+	componentWillMount() {
+		
+	}
 
 	// Mounted
-	componentDidMount() {}
+	componentDidMount() {
+		console.log(this.props.state.Auth.userCookie);
+		if(this.props.state.Auth.loggingIn) {
+			this.props.get_userdata(this.props.state.Auth.userCookie);
+			this.props.get_timetable(this.props.state.Auth.userCookie);
+			console.log(this.props.state.User);
+		} else {
+			// 로그인 안됨
+		}
+	}
 
 	render() {
+		console.log(this.props.state.User);
+
 		return (
 			<SafeAreaView style={styles.container}>
 				<View
@@ -75,7 +93,7 @@ export default class MainPage extends React.Component<any, any> {
 								<Image
 									style={commons.icon}
 									source={{
-										uri: this.props.screenProps.haksa.GetProfileImageURI(),
+										uri: this.props.state.User.profileURI,
 									}}
 								/>
 							</View>
@@ -144,3 +162,16 @@ const TabNavigator = createBottomTabNavigator(
 );
 
 const MainContainer = createAppContainer(TabNavigator);
+
+const mapStateToProps = state => ({
+	state: state,
+})
+
+const mapDispatchToProps = dispatch => {
+	return{
+		get_userdata: (_cookie: string) => dispatch(getUserDataAsync(_cookie)),
+		get_timetable: (_cookie: string) => dispatch(getTimeTableAsync(_cookie)),
+	}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MainPage);

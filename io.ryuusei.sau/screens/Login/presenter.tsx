@@ -18,18 +18,18 @@ import {Input, Button, CheckBox} from 'react-native-elements';
 import {commons} from '../../styles/commons';
 import {normalize} from '../../modules/FontNormalize';
 
-import { connect } from 'react-redux'
-import {store} from '../../reducer';
-
-import {login, loginAsync} from '../../reducers/Auth';
-
 import {
   NavigationInjectedProps,
   withNavigation,
   NavigationScreenProps,
 } from 'react-navigation';
 
-export class LoginPage extends React.Component {
+import { connect } from 'react-redux'
+import {store} from '../../reducer';
+
+import {loginAsync} from '../../reducers/Auth';
+
+export class LoginPage extends React.Component<any, any> {
   constructor(props: any) {
     super(props);
 
@@ -86,18 +86,21 @@ export class LoginPage extends React.Component {
   //}
 
   // Initialize
-  componentWillMount() {}
+  componentWillMount() {
+  }
 
   componentDidMount() {
     // this._fadeIn();
   }
 
   render() {
-    if(store.getState().Auth.loggingIn) {
+    if(this.props.state.Auth.loggingIn) {
       // 로그인이 되어있으므로 이동
+
+      
       this.props.navigation.navigate('Main');
     }
-    
+
     return (
       <KeyboardAvoidingView style={styles.container} behavior="padding">
         <Animated.View style={this._getStyle(null)}>
@@ -199,12 +202,13 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => ({
   state: state,
-
 })
 
 const mapDispatchToProps = dispatch => {
   return{
     login: (_userId: string, _userPassword: string) => dispatch(loginAsync(_userId, _userPassword)),
+    get_userdata: (_cookie: string) => dispatch(getUserDataAsync(_cookie)),
+		get_timetable: (_cookie: string) => dispatch(getTimeTableAsync(_cookie)),
   }
 }
 

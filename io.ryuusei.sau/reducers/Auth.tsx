@@ -74,6 +74,30 @@ export const loginAsync = (_userId, _userPassword) => {
 	}
 };
 
+export const checkAuthAsync = (_cookie) => {
+	return dispatch => {
+		console.log('try Check Auth');
+
+		let loginResult = axios.get(serverUri + '/auth/session?cookie=' + _cookie).then(response => {
+			if(response.data.isSessionAlive) {
+				dispatch({
+					type: LOGIN,
+					loggingIn: response.data.isSessionAlive,
+					userCookie: _cookie
+				});
+			} else {
+				dispatch({
+					type: LOGIN,
+					loggingIn: response.data.isSessionAlive,
+					userCookie: ''
+				})
+			}
+		}).catch(err => {
+
+		});
+	}
+}
+
 
 // Reducer Functions
 function func_login(state, action) {
