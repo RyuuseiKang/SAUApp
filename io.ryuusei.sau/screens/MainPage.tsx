@@ -31,7 +31,6 @@ import TableboardPage from './MainPage/TableboardPage';
 import SettingPage from './MainPage/SettingPage';
 
 import { connect } from 'react-redux'
-import {store} from '../reducer';
 
 import {getUserDataAsync, getTimeTableAsync} from '../reducers/User';
 
@@ -55,7 +54,6 @@ export class MainPage extends React.Component<any, any> {
 		if(this.props.state.Auth.loggingIn) {
 			this.props.get_userdata(this.props.state.Auth.userCookie);
 			this.props.get_timetable(this.props.state.Auth.userCookie);
-			console.log(this.props.state.User);
 		} else {
 			// 로그인 안됨
 		}
@@ -85,6 +83,7 @@ export class MainPage extends React.Component<any, any> {
 						<TouchableWithoutFeedback
 							onPress={() => {
 								alert('Show UserProfile Page');
+								// 여기서 로그아웃
 								this.props.screenProps.haksa.Logout();
 								this.props.navigation.navigate('Login');
 							}}

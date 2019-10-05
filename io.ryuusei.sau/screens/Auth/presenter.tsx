@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 
 import {login, loginAsync} from '../../reducers/Auth';
 
-export class AuthPage extends React.Component {
+export class AuthPage extends React.Component<any, any> {
 	constructor(props: any) {
 		super(props);
 
@@ -14,7 +14,7 @@ export class AuthPage extends React.Component {
 	}
 
 	bootStrapAsync = async () => {
-		if(store.getState().Auth.loggingIn)
+		if(this.props.state.Auth.loggingIn)
 			this.props.navigation.navigate('Main');
 		else
 			this.props.navigation.navigate('Login');

@@ -2,7 +2,11 @@ import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import SubjectItem from '../../components/SubjectItem';
 
-export default class DashboardPage extends React.Component {
+import { connect } from 'react-redux'
+
+import {getUserDataAsync, getTimeTableAsync} from '../../reducers/User';
+
+export class DashboardPage extends React.Component {
 	render() {
 		return (
 			<View>
@@ -74,3 +78,21 @@ const style = StyleSheet.create({
 		flex: 1,
 	},
 });
+
+function getToday() {
+	var d = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+	var date = new Date();
+	return d[date.getDay()];
+}
+
+const mapStateToProps = state => ({
+	state: state,
+})
+
+const mapDispatchToProps = dispatch => {
+	return{
+		get_timetable: (_cookie: string) => dispatch(getTimeTableAsync(_cookie)),
+	}
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(DashboardPage);
