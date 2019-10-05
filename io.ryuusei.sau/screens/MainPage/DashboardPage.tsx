@@ -4,9 +4,16 @@ import SubjectItem from '../../components/SubjectItem';
 
 import { connect } from 'react-redux'
 
-import {getUserDataAsync, getTimeTableAsync} from '../../reducers/User';
+import {getWeekTableAsync} from '../../reducers/User';
 
 export class DashboardPage extends React.Component {
+	refresh() {
+		this.props.get_weektable(this.props.state.User.number);
+
+		// 여기서 갱신
+		var outer = '<SubjectItem lessonName={} professorName={} location={} isLesson={} time={} />';
+	}
+
 	render() {
 		return (
 			<View>
@@ -91,7 +98,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => {
 	return{
-		get_timetable: (_cookie: string) => dispatch(getTimeTableAsync(_cookie)),
+		get_weektable: (_userNumber: string) => dispatch(getWeekTableAsync(_userNumber)),
 	}
 }
 

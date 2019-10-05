@@ -7,17 +7,21 @@ import axios from 'axios';
 // Actions
 const GET_USERDATA = 'GET_USERDATA';
 const GET_TIMETABLE = 'GET_TIMETABLE';
+const GET_WEEKTABLE = 'GET_WEEKTABLE';
 
 // Action Creators
 export const get_userdata = createAction(GET_USERDATA);
 export const get_timetable = createAction(GET_TIMETABLE);
+export const get_weektable = createAction(GET_WEEKTABLE);
+
 
 // Reducer
 const initialState = {
 	name: '',
     number: '',
     profileURI: '',
-    timeTable: {},
+	timeTable: {},
+	weekTable: {},
 };
 
 export default function reducer(state = initialState, action) {
@@ -26,6 +30,8 @@ export default function reducer(state = initialState, action) {
 			return func_getUserData(state, action);
 		case GET_TIMETABLE:
 			return func_getTimeTable(state, action);
+		case GET_WEEKTABLE:
+			return func_getWeekTable(state, action);
 		default:
 			return state;
 	}
@@ -68,6 +74,20 @@ export const getTimeTableAsync = (_cookie) => {
 	}
 }
 
+export const getWeekTableAsync = (_userNumber) => {
+	return dispatch => {
+		console.log('try GetWeekTable');
+
+		let getWeekTableResult = axios.get(serverUri + '/me/weekTimeTable?userNumber=' + _userNumber).then(response => {
+			
+			dispatch({
+				type: GET_WEEKTABLE,
+				weekTable: response.data,
+			})
+		})
+	}
+}
+
 // Reducer Functions
 function func_getUserData(state, action) {
 	return Object.assign({}, state, {
@@ -83,10 +103,17 @@ function func_getTimeTable(state, action) {
 	});
 }
 
+function func_getWeekTable(state, action) {
+	return Object.assign({}, state, {
+		weekTable: action.weekTable,
+	})
+}
+
 // Exports
 const actionCreators = {
 	get_userdata,
 	get_timetable,
+	get_weektable,
 };
 
 export {actionCreators};
