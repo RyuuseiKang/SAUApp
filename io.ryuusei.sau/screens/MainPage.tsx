@@ -50,7 +50,7 @@ export class MainPage extends React.Component<any, any> {
 
 	// Mounted
 	componentDidMount() {
-		console.log(this.props.state.Auth.userCookie);
+		// console.log(this.props.state.Auth.userCookie);
 		if(this.props.state.Auth.loggingIn) {
 			this.props.get_userdata(this.props.state.Auth.userCookie);
 			this.props.get_timetable(this.props.state.Auth.userCookie);
@@ -60,7 +60,7 @@ export class MainPage extends React.Component<any, any> {
 	}
 
 	render() {
-		console.log(this.props.state.User);
+		// console.log(this.props.state.User);
 
 		return (
 			<SafeAreaView style={styles.container}>

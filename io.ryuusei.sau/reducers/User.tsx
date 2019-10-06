@@ -21,7 +21,7 @@ const initialState = {
     number: '',
     profileURI: '',
 	timeTable: {},
-	weekTable: {},
+	weekTable: [],
 };
 
 export default function reducer(state = initialState, action) {
@@ -44,7 +44,7 @@ export const getUserDataAsync = (_cookie) => {
 		console.log('try GetUserData');
 
 		let getUserResult = axios.get(serverUri + '/me?cookie=' + _cookie).then(response => {
-			// console.log(response.data);
+			
 			dispatch({
 				type: GET_USERDATA,
 				number: response.data.userNumber,
@@ -52,6 +52,8 @@ export const getUserDataAsync = (_cookie) => {
 				profileURI: response.data.profileImageURI,
 			});
 
+			// const timeTable = getTimeTableAsync(_cookie);
+			// const weekTable = getWeekTableAsync(_cookie);
 		}).catch(err => {
 
 		});
@@ -65,7 +67,7 @@ export const getTimeTableAsync = (_cookie) => {
 		console.log('try GetTimeTable');
 
 		let getTimeTableResult = axios.get(serverUri + '/me/timetable?cookie=' + _cookie).then(response => {
-
+			
 			dispatch({
 				type: GET_TIMETABLE,
 				timeTable: response.data,
@@ -74,12 +76,12 @@ export const getTimeTableAsync = (_cookie) => {
 	}
 }
 
-export const getWeekTableAsync = (_userNumber) => {
+export const getWeekTableAsync = (_cookie) => {
 	return dispatch => {
 		console.log('try GetWeekTable');
 
-		let getWeekTableResult = axios.get(serverUri + '/me/weekTimeTable?userNumber=' + _userNumber).then(response => {
-			
+		let getWeekTableResult = axios.get(serverUri + '/me/weekTimeTable?cookie=' + _cookie).then(response => {
+			console.log(response.data);
 			dispatch({
 				type: GET_WEEKTABLE,
 				weekTable: response.data,
