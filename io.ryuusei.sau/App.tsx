@@ -14,7 +14,9 @@ import AuthPage from './screens/Auth/presenter';
 import Haksa from './modules/Haksa.js';
 
 import {Provider} from 'react-redux';
-import {store} from './reducer';
+import {store, persistor} from './reducer';
+
+import { PersistGate } from 'redux-persist/integration/react';
 
 export default class App extends React.Component {
 	haksa = new Haksa();
@@ -31,7 +33,9 @@ export default class App extends React.Component {
 	render() {
 		return (
 			<Provider store={store}>
-				<AppContainer screenProps={{haksa: this.haksa}} />
+				<PersistGate loading={null} persistor={persistor}>
+					<AppContainer screenProps={{haksa: this.haksa}} />
+				</PersistGate>
 			</Provider>
 		);
 	}

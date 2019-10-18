@@ -21,7 +21,12 @@ const initialState = {
     number: '',
     profileURI: '',
 	timeTable: {},
-	weekTable: [],
+	weekTable: {mon: {},
+				tue: {},
+				wed: {},
+				thu: {},
+				fri: {},
+				sat: {}},
 };
 
 export default function reducer(state = initialState, action) {
@@ -81,7 +86,6 @@ export const getWeekTableAsync = (_cookie) => {
 		console.log('try GetWeekTable');
 
 		let getWeekTableResult = axios.get(serverUri + '/me/weekTimeTable?cookie=' + _cookie).then(response => {
-			console.log(response.data);
 			dispatch({
 				type: GET_WEEKTABLE,
 				weekTable: response.data,

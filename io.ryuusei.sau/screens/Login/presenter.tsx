@@ -97,7 +97,6 @@ export class LoginPage extends React.Component<any, any> {
     if(this.props.state.Auth.loggingIn) {
       // 로그인이 되어있으므로 이동
 
-      
       this.props.navigation.navigate('Main');
     }
 
