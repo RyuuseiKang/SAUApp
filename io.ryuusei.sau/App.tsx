@@ -16,7 +16,7 @@ import Haksa from './modules/Haksa.js';
 import {Provider} from 'react-redux';
 import {store, persistor} from './reducer';
 
-import { PersistGate } from 'redux-persist/integration/react';
+import { PersistGate } from 'redux-persist/es/integration/react';
 
 export default class App extends React.Component {
 	haksa = new Haksa();

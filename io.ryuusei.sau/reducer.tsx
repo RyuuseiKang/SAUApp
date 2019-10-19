@@ -2,7 +2,7 @@ import {combineReducers, createStore, applyMiddleware} from 'redux';
 import devToolsEnhancer from 'remote-redux-devtools';
 import ReduxThunk from 'redux-thunk';
 import {persistStore, persistReducer} from 'redux-persist';
-import storage from 'redux-persist/lib/storage/session';
+import storage from 'redux-persist/lib/storage';
 
 const persistConfig = {
     key: 'root',
