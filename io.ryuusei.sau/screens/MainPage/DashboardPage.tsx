@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, RefreshControl} from 'react-native';
+import {View, Text, StyleSheet, RefreshControl, ScrollView} from 'react-native';
 import SubjectItem from '../../components/SubjectItem';
 
 import { connect } from 'react-redux'
@@ -10,46 +10,105 @@ export class DashboardPage extends React.Component {
 	constructor(props: any) {
 		super(props);
 
-		this.state = {list: ''};
+		this.state = {list: '', refreshing: false,};
 
 		// bootstrapping here
 	}
 
-	refresh() {
+	refreshItems = () => {
     this.props.get_weektable(this.props.state.Auth.userCookie);
 
-		/*
-		this.state.list = this.props.state.User.weekTable.mon.map(
-			tableData => ( <SubjectItem lessonName={tableData['lessonName']}
-																	professorName={tableData['professorName']}
-																	location={tableData['location']}
-																	isLesson={tableData['isLesson']}
-																	time={tableData['time']}
-																	isEnd={tableData['isEnd']} />)
-		);
-
-		*/
-
 		// 여기서 갱신
-		console.log(this.props.state.User.weekTable[0]);
+		this.render();
+		this.setState({refreshing: false});
+		console.log(this.props.state.User.weekTable);
 	}
 	
+	
+
 	componentDidMount() {
-		//this.refresh();
+
 	}
 
+	_onRefresh = () => {
+		this.setState({refreshing: true});
+		this.refreshItems();
+	  }
+
 	render() {
+
+		const mon = this.props.state.User.weekTable['mon'].map((data, i) => {
+			return (<SubjectItem lessonName={data.lessonName}
+								professorName={data.professorName}
+								location={data.location}
+								isLesson={data.isLesson}
+								time={data.time}
+								isEnd={data.isEnd}
+								/>);
+		});
+		const tue = this.props.state.User.weekTable['tue'].map((data, i) => {
+			return (<SubjectItem lessonName={data.lessonName}
+								professorName={data.professorName}
+								location={data.location}
+								isLesson={data.isLesson}
+								time={data.time}
+								isEnd={data.isEnd}
+								/>);
+		});
+		const wed = this.props.state.User.weekTable['wed'].map((data, i) => {
+			return (<SubjectItem lessonName={data.lessonName}
+								professorName={data.professorName}
+								location={data.location}
+								isLesson={data.isLesson}
+								time={data.time}
+								isEnd={data.isEnd}
+								/>);
+		});
+		const thu = this.props.state.User.weekTable['thu'].map((data, i) => {
+			return (<SubjectItem lessonName={data.lessonName}
+								professorName={data.professorName}
+								location={data.location}
+								isLesson={data.isLesson}
+								time={data.time}
+								isEnd={data.isEnd}
+								/>);
+		});
+		const fri = this.props.state.User.weekTable['fri'].map((data, i) => {
+			return (<SubjectItem lessonName={data.lessonName}
+								professorName={data.professorName}
+								location={data.location}
+								isLesson={data.isLesson}
+								time={data.time}
+								isEnd={data.isEnd}
+								/>);
+		});
+		const sat = this.props.state.User.weekTable['mon'].map((data, i) => {
+			return (<SubjectItem lessonName={data.lessonName}
+								professorName={data.professorName}
+								location={data.location}
+								isLesson={data.isLesson}
+								time={data.time}
+								isEnd={data.isEnd}
+								/>);
+		});
 		
+
+		console.log(mon);
+		console.log(tue);
+		console.log(wed);
+		console.log(thu);
+		console.log(fri);
+		console.log(sat);
+
 		return (
-			<View>
-				<View>
-				<Text onPress={() => {
-					this.refresh();
-					
-				}}>ASDFASDFASDFASDFASDFASDFASDFADSFASDFASDFASDFASDFASDFADSFASDFASDFASDFASDFASDFASDFASDFASDFASDFASDFADSFASDFADSFADFASDF</Text>
-				
-				</View>
-			</View>
+			<ScrollView refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this._onRefresh} title={'일정을 새로고침합니다.'}/>}>
+				{mon}
+				{tue}
+				{wed}
+				{thu}
+				{fri}
+				{sat}
+			</ScrollView>
 		);
 	}
 }

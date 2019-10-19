@@ -21,12 +21,13 @@ const initialState = {
     number: '',
     profileURI: '',
 	timeTable: {},
-	weekTable: {mon: {},
-				tue: {},
-				wed: {},
-				thu: {},
-				fri: {},
-				sat: {}},
+	weekTable: {mon: [],
+				tue: [],
+				wed: [],
+				thu: [],
+				fri: [],
+				sat: [],
+				},
 };
 
 export default function reducer(state = initialState, action) {
