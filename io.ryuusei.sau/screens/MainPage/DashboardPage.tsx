@@ -13,6 +13,7 @@ export class DashboardPage extends React.Component {
 		this.state = {list: '', refreshing: false,};
 
 		// bootstrapping here
+		this._onRefresh();
 	}
 
 	refreshItems = () => {

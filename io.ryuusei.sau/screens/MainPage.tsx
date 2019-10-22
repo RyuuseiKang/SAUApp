@@ -32,6 +32,7 @@ import SettingPage from './MainPage/SettingPage';
 
 import { connect } from 'react-redux'
 
+import {logout} from '../reducers/Auth';
 import {getUserDataAsync, getTimeTableAsync} from '../reducers/User';
 
 export class MainPage extends React.Component<any, any> {
@@ -84,7 +85,8 @@ export class MainPage extends React.Component<any, any> {
 							onPress={() => {
 								alert('Show UserProfile Page');
 								// 여기서 로그아웃
-								this.props.screenProps.haksa.Logout();
+								// this.props.screenProps.haksa.Logout();
+								this.props.logout();
 								this.props.navigation.navigate('Login');
 							}}
 						>
@@ -168,6 +170,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => {
 	return{
+		logout: () => dispatch(logout()),
 		get_userdata: (_cookie: string) => dispatch(getUserDataAsync(_cookie)),
 		get_timetable: (_cookie: string) => dispatch(getTimeTableAsync(_cookie)),
 	}

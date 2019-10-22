@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "SAU",
-    "slug": "sau.ryuusei.io",
+    "slug": "sau",
     "privacy": "public",
     "sdkVersion": "34.0.0",
     "platforms": [
