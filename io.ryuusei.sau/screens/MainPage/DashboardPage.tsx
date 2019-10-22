@@ -22,7 +22,7 @@ export class DashboardPage extends React.Component {
 		// 여기서 갱신
 		this.render();
 		this.setState({refreshing: false});
-		console.log(this.props.state.User.weekTable);
+		// console.log(this.props.state.User.weekTable);
 	}
 	
 	
@@ -92,14 +92,6 @@ export class DashboardPage extends React.Component {
 								isEnd={data.isEnd}
 								/>);
 		});
-		
-
-		console.log(mon);
-		console.log(tue);
-		console.log(wed);
-		console.log(thu);
-		console.log(fri);
-		console.log(sat);
 
 		return (
 			<ScrollView refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this._onRefresh} title={'일정을 새로고침합니다.'}/>}>

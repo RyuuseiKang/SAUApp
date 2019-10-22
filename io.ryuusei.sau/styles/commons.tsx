@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, PixelRatio} from 'react-native';
+import {StyleSheet, PixelRatio, Dimensions} from 'react-native';
 
 import {normalize} from '../modules/FontNormalize';
 
@@ -18,3 +18,6 @@ export const commons = StyleSheet.create({
 		fontWeight: 'normal',
 	},
 });
+
+export var deviceWidth = Dimensions.get('window').width;
+export var deviceHeight = Dimensions.get('window').height;

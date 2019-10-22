@@ -33,6 +33,7 @@ import SettingPage from './MainPage/SettingPage';
 import { connect } from 'react-redux'
 
 import {logout} from '../reducers/Auth';
+import {checkAuthAsync} from '../reducers/Auth';
 import {getUserDataAsync, getTimeTableAsync} from '../reducers/User';
 
 export class MainPage extends React.Component<any, any> {
@@ -52,11 +53,14 @@ export class MainPage extends React.Component<any, any> {
 	// Mounted
 	componentDidMount() {
 		// console.log(this.props.state.Auth.userCookie);
+		this.props.check_auth(this.props.state.Auth.userCookie);
+
 		if(this.props.state.Auth.loggingIn) {
 			this.props.get_userdata(this.props.state.Auth.userCookie);
 			this.props.get_timetable(this.props.state.Auth.userCookie);
 		} else {
 			// 로그인 안됨
+			this.props.navigation.navigate('Auth');
 		}
 	}
 
@@ -87,7 +91,7 @@ export class MainPage extends React.Component<any, any> {
 								// 여기서 로그아웃
 								// this.props.screenProps.haksa.Logout();
 								this.props.logout();
-								this.props.navigation.navigate('Login');
+								this.props.navigation.navigate('Auth');
 							}}
 						>
 							<View style={styles.icon}>
@@ -156,7 +160,7 @@ function getToday() {
 const TabNavigator = createBottomTabNavigator(
 	{
 		Dashboard: DashboardPage,
-		Table: TableboardPage,
+		TimeTable: TableboardPage,
 		Setting: SettingPage,
 	},
 	{tabBarComponent: TabBar},
@@ -171,6 +175,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => {
 	return{
 		logout: () => dispatch(logout()),
+		check_auth: (_cookie: string) => dispatch(checkAuthAsync(_cookie)),
 		get_userdata: (_cookie: string) => dispatch(getUserDataAsync(_cookie)),
 		get_timetable: (_cookie: string) => dispatch(getTimeTableAsync(_cookie)),
 	}
