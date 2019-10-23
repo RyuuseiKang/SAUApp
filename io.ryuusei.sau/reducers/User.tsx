@@ -8,12 +8,13 @@ import axios from 'axios';
 const GET_USERDATA = 'GET_USERDATA';
 const GET_TIMETABLE = 'GET_TIMETABLE';
 const GET_WEEKTABLE = 'GET_WEEKTABLE';
+const LOGOUT = 'LOGOUT';
 
 // Action Creators
 export const get_userdata = createAction(GET_USERDATA);
 export const get_timetable = createAction(GET_TIMETABLE);
 export const get_weektable = createAction(GET_WEEKTABLE);
-
+export const userLogout = createAction(LOGOUT);
 
 // Reducer
 const initialState = {
@@ -38,6 +39,8 @@ export default function reducer(state = initialState, action) {
 			return func_getTimeTable(state, action);
 		case GET_WEEKTABLE:
 			return func_getWeekTable(state, action);
+		case LOGOUT:
+			return func_logout(state, action);
 		default:
 			return state;
 	}
@@ -113,7 +116,11 @@ function func_getTimeTable(state, action) {
 function func_getWeekTable(state, action) {
 	return Object.assign({}, state, {
 		weekTable: action.weekTable,
-	})
+	});
+}
+
+function func_logout(state, action) {
+	return Object.assign({}, state, initialState);
 }
 
 // Exports

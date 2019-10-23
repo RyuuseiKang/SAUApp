@@ -28,13 +28,15 @@ import {
 
 import DashboardPage from './MainPage/DashboardPage';
 import TableboardPage from './MainPage/TableboardPage';
+import DeptPage from './MainPage/DeptPage';
+import NotifyPage from './MainPage/NotifyPage';
 import SettingPage from './MainPage/SettingPage';
 
-import { connect } from 'react-redux'
+import {connect} from 'react-redux';
 
-import {logout} from '../reducers/Auth';
-import {checkAuthAsync} from '../reducers/Auth';
-import {getUserDataAsync, getTimeTableAsync} from '../reducers/User';
+import {pageLogout} from '../reducers/Page';
+import {checkAuthAsync, logout} from '../reducers/Auth';
+import {getUserDataAsync, getTimeTableAsync, userLogout} from '../reducers/User';
 
 export class MainPage extends React.Component<any, any> {
 	constructor(props: any) {
@@ -43,19 +45,17 @@ export class MainPage extends React.Component<any, any> {
 		// bootstrapping here
 	}
 
-	state = {pageName: '이번주', loaded: false, profileURI: ''};
+	state = {loaded: false, profileURI: ''};
 
 	// Initialize
-	componentWillMount() {
-		
-	}
+	componentWillMount() {}
 
 	// Mounted
 	componentDidMount() {
 		// console.log(this.props.state.Auth.userCookie);
 		this.props.check_auth(this.props.state.Auth.userCookie);
 
-		if(this.props.state.Auth.loggingIn) {
+		if (this.props.state.Auth.loggingIn) {
 			this.props.get_userdata(this.props.state.Auth.userCookie);
 			this.props.get_timetable(this.props.state.Auth.userCookie);
 		} else {
@@ -81,7 +81,7 @@ export class MainPage extends React.Component<any, any> {
 							{getToday()}
 						</Text>
 						<Text allowFontScaling={false} style={styles.title}>
-							{this.state.pageName}
+							{this.props.state.Page.pageName}
 						</Text>
 					</View>
 					<View style={{paddingRight: 20, paddingTop: 15, paddingBottom: 15}}>
@@ -161,6 +161,8 @@ const TabNavigator = createBottomTabNavigator(
 	{
 		Dashboard: DashboardPage,
 		TimeTable: TableboardPage,
+		Dept: DeptPage,
+		Notify: NotifyPage,
 		Setting: SettingPage,
 	},
 	{tabBarComponent: TabBar},
@@ -170,15 +172,18 @@ const MainContainer = createAppContainer(TabNavigator);
 
 const mapStateToProps = state => ({
 	state: state,
-})
+});
 
 const mapDispatchToProps = dispatch => {
-	return{
-		logout: () => dispatch(logout()),
+	return {
+		logout: () => {dispatch(logout()); dispatch(pageLogout()); dispatch(userLogout());},
 		check_auth: (_cookie: string) => dispatch(checkAuthAsync(_cookie)),
 		get_userdata: (_cookie: string) => dispatch(getUserDataAsync(_cookie)),
 		get_timetable: (_cookie: string) => dispatch(getTimeTableAsync(_cookie)),
-	}
-}
+	};
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(MainPage);
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps,
+)(MainPage);

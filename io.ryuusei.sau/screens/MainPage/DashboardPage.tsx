@@ -123,8 +123,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => {
-	return{
-		get_weektable: (_cookie: string) => dispatch(getWeekTableAsync(_cookie)),
+	return {
+	  get_weektable: (_cookie: string) => dispatch(getWeekTableAsync(_cookie)),
 	}
 }
 

@@ -74,7 +74,7 @@ export const loginAsync = (_userId, _userPassword) => {
 	}
 };
 
-export const checkAuthAsync = (_cookie) => {
+export const checkAuthAsync = (_cookie: string) => {
 	return dispatch => {
 		console.log('try Check Auth');
 

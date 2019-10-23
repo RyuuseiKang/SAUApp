@@ -11,10 +11,12 @@ const persistConfig = {
 
 import Auth from './reducers/Auth';
 import User from './reducers/User';
+import Page from './reducers/Page';
 
 export const rootReducer = combineReducers({
     Auth,
     User,
+    Page,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

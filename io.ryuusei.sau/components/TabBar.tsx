@@ -7,7 +7,11 @@ import {Ionicons, FontAwesome5, MaterialCommunityIcons} from '@expo/vector-icons
 import { LinearGradient } from 'expo-linear-gradient';
 import { deviceWidth } from '../styles/commons';
 
-export default class TabBar extends React.Component {
+import {connect} from 'react-redux';
+
+import {setPage} from '../reducers/Page';
+
+export class TabBar extends React.Component {
   TimeLineAnimated = new Animated.Value(0);
   TimeTableAnimated = new Animated.Value(0);
   DeptAnimated = new Animated.Value(0);
@@ -25,7 +29,11 @@ export default class TabBar extends React.Component {
         <Animated.View style={styles.container}>
 
           <TouchableOpacity style={styles.itemOuter} activeOpacity={1}
-          onPress={() => {this.props.navigation.navigate('Dashboard'); ColorAnimation.pressAnimation(this.colorAnimated, 0); IndicatorAnimation.onPress(this.IndicatorAnimated, 0);}}
+          onPress={() => {
+            this.props.SetPage('이번주');
+            this.props.navigation.navigate('Dashboard');
+            ColorAnimation.pressAnimation(this.colorAnimated, 0);
+            IndicatorAnimation.onPress(this.IndicatorAnimated, 0);}}
           onPressIn={() => {ButtonAnimation.pressInAnimation(this.TimeLineAnimated);}}
           onPressOut={() => {ButtonAnimation.pressOutAnimation(this.TimeLineAnimated);}}>
             <Animated.View style={[styles.backGradient, ButtonAnimation.getStyle(this.TimeLineAnimated)]}>
@@ -38,7 +46,11 @@ export default class TabBar extends React.Component {
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.itemOuter} activeOpacity={1}
-          onPress={() => {this.props.navigation.navigate('TimeTable'); ColorAnimation.pressAnimation(this.colorAnimated, 1); IndicatorAnimation.onPress(this.IndicatorAnimated, 1);}}
+          onPress={() => {
+            this.props.SetPage('시간표');
+            this.props.navigation.navigate('TimeTable');
+            ColorAnimation.pressAnimation(this.colorAnimated, 1);
+            IndicatorAnimation.onPress(this.IndicatorAnimated, 1);}}
           onPressIn={() => {ButtonAnimation.pressInAnimation(this.TimeTableAnimated);}}
           onPressOut={() => {ButtonAnimation.pressOutAnimation(this.TimeTableAnimated);}}>
             <Animated.View style={[styles.backGradient, ButtonAnimation.getStyle(this.TimeTableAnimated)]}>
@@ -51,7 +63,11 @@ export default class TabBar extends React.Component {
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.itemOuter} activeOpacity={1}
-          onPress={() => { ColorAnimation.pressAnimation(this.colorAnimated, 2); IndicatorAnimation.onPress(this.IndicatorAnimated, 2);}}
+          onPress={() => {
+            this.props.SetPage('학과');
+            this.props.navigation.navigate('Dept');
+            ColorAnimation.pressAnimation(this.colorAnimated, 2);
+            IndicatorAnimation.onPress(this.IndicatorAnimated, 2);}}
           onPressIn={() => {ButtonAnimation.pressInAnimation(this.DeptAnimated);}}
           onPressOut={() => {ButtonAnimation.pressOutAnimation(this.DeptAnimated);}}>
             <Animated.View style={[styles.backGradient, ButtonAnimation.getStyle(this.DeptAnimated)]}>
@@ -64,7 +80,11 @@ export default class TabBar extends React.Component {
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.itemOuter} activeOpacity={1}
-          onPress={() => { ColorAnimation.pressAnimation(this.colorAnimated, 3); IndicatorAnimation.onPress(this.IndicatorAnimated, 3);}}
+          onPress={() => {
+            this.props.SetPage('알림');
+            this.props.navigation.navigate('Notify');
+            ColorAnimation.pressAnimation(this.colorAnimated, 3);
+            IndicatorAnimation.onPress(this.IndicatorAnimated, 3);}}
           onPressIn={() => {ButtonAnimation.pressInAnimation(this.NotifyAnimated);}}
           onPressOut={() => {ButtonAnimation.pressOutAnimation(this.NotifyAnimated);}}>
             <Animated.View style={[styles.backGradient, ButtonAnimation.getStyle(this.NotifyAnimated)]}>
@@ -77,7 +97,11 @@ export default class TabBar extends React.Component {
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.itemOuter} activeOpacity={1}
-          onPress={() => {this.props.navigation.navigate('Setting'); ColorAnimation.pressAnimation(this.colorAnimated, 4); IndicatorAnimation.onPress(this.IndicatorAnimated, 4);}}
+          onPress={() => {
+            this.props.SetPage('설정');
+            this.props.navigation.navigate('Setting');
+            ColorAnimation.pressAnimation(this.colorAnimated, 4);
+            IndicatorAnimation.onPress(this.IndicatorAnimated, 4);}}
           onPressIn={() => {ButtonAnimation.pressInAnimation(this.SettingAnimated);}}
           onPressOut={() => {ButtonAnimation.pressOutAnimation(this.SettingAnimated);}}>
             <Animated.View style={[styles.backGradient, ButtonAnimation.getStyle(this.SettingAnimated)]}>
@@ -197,3 +221,15 @@ const IndicatorAnimation = {
     }).start();
   }
 }
+
+const mapStateToProps = state => ({
+  state: state,
+})
+
+const mapDispatchToProps = dispatch => {
+  return {
+    SetPage: (_pageName: string) => dispatch(setPage(_pageName)),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(TabBar);
