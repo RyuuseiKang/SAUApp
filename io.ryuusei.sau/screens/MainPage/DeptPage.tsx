@@ -18,7 +18,7 @@ export class DeptPage extends React.Component {
 
 	render() {
 		return (
-			<WebView source={{uri: 'http://dept1.sau.ac.kr/sau' + this.props.state.User.number.substr(3, 2)}} style={styles.web} />
+			<WebView useWebKit={true} source={{uri: 'http://dept1.sau.ac.kr/sau' + this.props.state.User.number.substr(3, 2) + '/218'}} style={styles.web} />
 		);
 	}
 }

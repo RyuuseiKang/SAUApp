@@ -168,11 +168,11 @@ const ButtonAnimation = {
     });
     return {opacity: interpolation};
   },
-  pressInAnimation(animated: Animated.Value, duration: number = 50) {
+  pressInAnimation(animated: Animated.Value, duration: number = 30) {
     Animated.timing(animated, {
       toValue: 1,
       duration,
-      easing: Easing.circle,
+      easing: Easing.bounce,
     }).start();
   },
   // This defines animatiom behavior we expect onPressOut

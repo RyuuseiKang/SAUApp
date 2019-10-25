@@ -83,7 +83,7 @@ export class DashboardPage extends React.Component {
 								isEnd={data.isEnd}
 								/>);
 		});
-		const sat = this.props.state.User.weekTable['mon'].map((data, i) => {
+		const sat = this.props.state.User.weekTable['sat'].map((data, i) => {
 			return (<SubjectItem lessonName={data.lessonName}
 								professorName={data.professorName}
 								location={data.location}

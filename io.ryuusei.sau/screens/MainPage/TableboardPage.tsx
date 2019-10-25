@@ -1,13 +1,12 @@
 import React from 'react';
 import {View, StyleSheet, Text} from 'react-native';
+import Table from '../../components/Table';
 
 export default class TableboardPage extends React.Component {
   render() {
     return (
       <View>
-        <View>
-          <Text>TableboardPage</Text>
-        </View>
+          <Table />
       </View>
     );
   }
