@@ -67,6 +67,9 @@ export class MainPage extends React.Component<any, any> {
 	render() {
 		// console.log(this.props.state.User);
 
+		if(!this.props.state.Auth.loggingIn)
+			this.props.navigation.navigate('Auth');
+
 		return (
 			<SafeAreaView style={styles.container}>
 				<View
@@ -87,11 +90,7 @@ export class MainPage extends React.Component<any, any> {
 					<View style={{paddingRight: 20, paddingTop: 15, paddingBottom: 15}}>
 						<TouchableWithoutFeedback
 							onPress={() => {
-								alert('Show UserProfile Page');
-								// 여기서 로그아웃
-								// this.props.screenProps.haksa.Logout();
-								this.props.logout();
-								this.props.navigation.navigate('Auth');
+								alert('프로필 페이지가 준비되지 않았습니다.');
 							}}
 						>
 							<View style={styles.icon}>
