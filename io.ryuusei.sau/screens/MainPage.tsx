@@ -134,10 +134,10 @@ const styles = StyleSheet.create({
 			width: 0,
 			height: 0,
 		},
-		shadowOpacity: 0.3,
+		shadowOpacity: 0.25,
 		shadowRadius: 10,
 
-		elevation: 10,
+		elevation: 5,
 	},
 	pages: {width: deviceWidth},
 });

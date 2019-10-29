@@ -20,7 +20,7 @@ export class NotifyPage extends React.Component {
 		return (
 			<View>
 				<View>
-					<Text>NotifyPage</Text>
+					<Text>알림이 없어요~</Text>
 				</View>
 			</View>
 		);

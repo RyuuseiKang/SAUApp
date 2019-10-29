@@ -40,7 +40,7 @@ export default class SubjectItem extends React.Component<IProps> {
 			if (this.props.isLesson) {
 				lessonLine = (
 					<View>
-						<View style={styles.solidLine}></View>
+						<View style={[styles.solidLine, {backgroundColor: this.props.color}]}></View>
 					</View>
 				);
 			} else {
@@ -48,7 +48,7 @@ export default class SubjectItem extends React.Component<IProps> {
 					<Dash
 						style={styles.dottedLine}
 						dashGap={normalize(2.2)}
-						dashColor={'#FF6663'}
+						dashColor={this.props.color}
 						dashThickness={normalize(2.5)}
 						dashLength={normalize(2.5)}
 						dashStyle={{borderRadius: normalize(2)}}
@@ -72,7 +72,7 @@ export default class SubjectItem extends React.Component<IProps> {
 
 		if (this.props.isLesson) {
 			professorNameView = (
-				<View style={styles.professorNameBack}>
+				<View style={[styles.professorNameBack, {backgroundColor: this.props.color}]}>
 					<Text allowFontScaling={false} style={styles.professorName}>
 						{this.props.professorName}
 					</Text>
@@ -118,7 +118,7 @@ export default class SubjectItem extends React.Component<IProps> {
 								>
 									{lessonLine}
 								</View>
-								<View style={styles.typeCircle}></View>
+								<View style={[styles.typeCircle, {borderColor: this.props.color}]}></View>
 							</View>
 						</View>
 						<View style={{margin: 5}}>
@@ -155,7 +155,6 @@ const styles = StyleSheet.create({
 		fontFamily: 'LexendDeca-Regular',
 	},
 	typeCircle: {
-		borderColor: '#FF6663',
 		borderWidth: normalize(2),
 		backgroundColor: '#FFFFFF',
 		height: normalize(10),
@@ -165,7 +164,6 @@ const styles = StyleSheet.create({
 		position: 'absolute',
 	},
 	solidLine: {
-		backgroundColor: '#FF6663',
 		height: normalize(60),
 		width: normalize(2),
 	},
@@ -191,7 +189,6 @@ const styles = StyleSheet.create({
 		padding: 2.5,
 	},
 	professorNameBack: {
-		backgroundColor: '#FF6663',
 		borderRadius: normalize(3),
 		justifyContent: 'center',
 		alignItems: 'center',
